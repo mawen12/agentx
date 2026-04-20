@@ -1,0 +1,56 @@
+package com.github.mawen12.agent.api.interceptor;
+
+import com.github.mawen12.agent.api.context.Context;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class InterceptorChain {
+    private final List<Interceptor> interceptors;
+
+    public InterceptorChain(List<Interceptor> interceptors) {
+        if (interceptors == null) {
+            interceptors = new ArrayList<>();
+        }
+        this.interceptors = interceptors.stream()
+                .sorted(Comparator.comparing(Interceptor::order))
+                .collect(Collectors.toList());
+    }
+
+    public void before(MethodInfo methodInfo, Context ctx) {
+        doBefore(methodInfo, ctx, 0);
+    }
+
+    private void doBefore(MethodInfo methodInfo, Context ctx, int pos) {
+        if (pos == interceptors.size()) {
+            return;
+        }
+
+        Interceptor interceptor = interceptors.get(pos);
+        try {
+            interceptor.before(methodInfo, ctx);
+        } catch (Throwable e) {
+            // TODO logging
+        }
+        doBefore(methodInfo, ctx, pos + 1);
+    }
+
+    public void after(MethodInfo methodInfo, Context ctx) {
+        doAfter(methodInfo, ctx, interceptors.size() - 1);
+    }
+
+    private void doAfter(MethodInfo methodInfo, Context ctx, int pos) {
+        if (pos < 0) {
+            return;
+        }
+        Interceptor interceptor = interceptors.get(pos);
+        try {
+            interceptor.after(methodInfo, ctx);
+        } catch (Throwable e) {
+            // TODO logging
+        }
+        doAfter(methodInfo, ctx, pos - 1);
+    }
+}

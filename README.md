@@ -1,2 +1,2 @@
 # agentx
-Java Agent
+Java Agent for Java Application Performance Monitoring and Observability.
