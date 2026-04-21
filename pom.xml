@@ -4,18 +4,27 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.mawen12</groupId>
+    <groupId>com.github.mawen12.agentx</groupId>
     <artifactId>agentx</artifactId>
     <version>0.1-SNAPSHOT</version>
 
     <packaging>pom</packaging>
     <modules>
         <module>api</module>
+        <module>core</module>
+        <module>loader</module>
     </modules>
 
     <properties>
         <java.version>8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <version.auto-service>1.1.1</version.auto-service>
+        <version.metrics5-dropwizcard>5.0.6</version.metrics5-dropwizcard>
+        <version.prometheus>0.16.0</version.prometheus>
+        <version.nanohttpd>2.3.1</version.nanohttpd>
+        <version.log4j2>2.25.4</version.log4j2>
+        <version.disruptor>4.0.0</version.disruptor>
     </properties>
 
     <dependencies>
@@ -38,6 +47,62 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>1.18.36</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.auto.service</groupId>
+                <artifactId>auto-service</artifactId>
+                <version>${version.auto-service}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.auto.service</groupId>
+                <artifactId>auto-service-annotations</artifactId>
+                <version>${version.auto-service}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.dropwizard.metrics5</groupId>
+                <artifactId>metrics-bom</artifactId>
+                <version>${version.metrics5-dropwizcard}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.prometheus</groupId>
+                <artifactId>simpleclient</artifactId>
+                <version>${version.prometheus}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.prometheus</groupId>
+                <artifactId>simpleclient_common</artifactId>
+                <version>${version.prometheus}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.prometheus</groupId>
+                <artifactId>simpleclient_dropwizard</artifactId>
+                <version>${version.prometheus}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.nanohttpd</groupId>
+                <artifactId>nanohttpd</artifactId>
+                <version>${version.nanohttpd}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${version.log4j2}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.lmax</groupId>
+                <artifactId>disruptor</artifactId>
+                <version>${version.disruptor}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
