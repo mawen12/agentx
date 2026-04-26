@@ -25,6 +25,7 @@
         <version.nanohttpd>2.3.1</version.nanohttpd>
         <version.log4j2>2.25.4</version.log4j2>
         <version.disruptor>4.0.0</version.disruptor>
+        <version.httpservlet>4.0.1</version.httpservlet>
     </properties>
 
     <dependencies>
@@ -103,6 +104,12 @@
                 <groupId>com.lmax</groupId>
                 <artifactId>disruptor</artifactId>
                 <version>${version.disruptor}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${version.httpservlet}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

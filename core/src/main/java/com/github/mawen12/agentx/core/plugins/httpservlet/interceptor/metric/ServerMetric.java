@@ -1,0 +1,71 @@
+package com.github.mawen12.agentx.core.plugins.httpservlet.interceptor.metric;
+
+import com.github.mawen12.agentx.api.metric.Meter;
+import com.github.mawen12.agentx.api.metric.MetricRegistry;
+import com.github.mawen12.agentx.api.metric.NameFactory;
+import com.github.mawen12.agentx.api.metric.ServiceMetric;
+import com.github.mawen12.agentx.core.metric.ErrorPercentModelGauge;
+
+import java.math.BigDecimal;
+import java.time.Duration;
+
+import static com.github.mawen12.agentx.api.metric.Metric.SubType.DEFAULT;
+import static com.github.mawen12.agentx.api.metric.Metric.SubType.ERROR;
+
+public class ServerMetric extends ServiceMetric {
+    public static final NameFactory SERVER_NAME_FACTORY = ServerNameFactory.INSTANCE.nameFactory();
+
+    public ServerMetric(MetricRegistry metricRegistry, NameFactory nameFactory) {
+        super(metricRegistry, nameFactory);
+    }
+
+    public void collectMetric(String key, int statusCode, Throwable throwable, long startMillis, long endMillis) {
+        timer(key, DEFAULT).update(Duration.ofMillis(endMillis - startMillis));
+        meter(key, DEFAULT).mark();
+        counter(key, DEFAULT).inc();
+
+        Meter meter = meter(key, DEFAULT);
+        meter.mark();
+        Meter errMeter = meter(key, ERROR);
+
+        if (statusCode >= 400 || throwable != null) {
+            errMeter.mark();
+            counter(key, ERROR).inc();
+        }
+
+        gauge(key, DEFAULT, () -> () -> {
+            BigDecimal m1ErrorPercent = BigDecimal.ZERO;
+            BigDecimal m5ErrorPercent = BigDecimal.ZERO;
+            BigDecimal m15ErrorPercent = BigDecimal.ZERO;
+
+            BigDecimal error = BigDecimal.valueOf(errMeter.getOneMinuteRate()).setScale(5, BigDecimal.ROUND_HALF_DOWN);
+            BigDecimal n = BigDecimal.valueOf(meter.getOneMinuteRate());
+            if (n.compareTo(BigDecimal.ZERO) > 0) {
+                m1ErrorPercent = error.divide(n, 2, BigDecimal.ROUND_HALF_UP);
+            }
+
+            error = BigDecimal.valueOf(errMeter.getFiveMinuteRate()).setScale(5, BigDecimal.ROUND_HALF_DOWN);
+            n = BigDecimal.valueOf(meter.getFiveMinuteRate());
+            if (n.compareTo(BigDecimal.ZERO) > 0) {
+                m5ErrorPercent = error.divide(n, 2, BigDecimal.ROUND_HALF_UP);
+            }
+
+            error = BigDecimal.valueOf(errMeter.getFifteenMinuteRate()).setScale(5, BigDecimal.ROUND_HALF_DOWN);
+            n = BigDecimal.valueOf(meter.getFifteenMinuteRate());
+            if (n.compareTo(BigDecimal.ZERO) > 0) {
+                m5ErrorPercent = error.divide(n, 2, BigDecimal.ROUND_HALF_UP);
+            }
+
+            return new ErrorPercentModelGauge(m1ErrorPercent, m5ErrorPercent, m15ErrorPercent);
+        });
+    }
+
+    enum ServerNameFactory implements NameFactory.Supplier {
+        INSTANCE;
+
+        @Override
+        public NameFactory nameFactory() {
+            return NameFactory.createDefault();
+        }
+    }
+}

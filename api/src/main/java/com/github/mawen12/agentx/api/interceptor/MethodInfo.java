@@ -26,4 +26,8 @@ public class MethodInfo {
         this.args[index] = arg;
         this.changed = true;
     }
+
+    public boolean hasArgs() {
+        return args != null && args.length > 0;
+    }
 }

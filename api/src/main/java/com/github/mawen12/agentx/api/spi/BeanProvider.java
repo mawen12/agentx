@@ -4,6 +4,8 @@ public interface BeanProvider {
 
     void afterPropertiesSet();
 
+    State onState();
+
     enum State {
         Start, AgentReady, DruidReady, SpringBootReady;
     }

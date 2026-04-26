@@ -1,6 +1,7 @@
 package com.github.mawen12.agentx.api.logging;
 
 public interface LoggerFactory {
+    LoggerFactory NOOP = NoOp.INSTANCE;
 
     Logger getLogger(String name);
 

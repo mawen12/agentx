@@ -25,6 +25,10 @@ public interface Snapshot {
         return getValue(0.75);
     }
 
+    default double get95thPercentile() {
+        return getValue(0.95);
+    }
+
     default double get98thPercentile() {
         return getValue(0.98);
     }
