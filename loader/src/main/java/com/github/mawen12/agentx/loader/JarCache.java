@@ -72,7 +72,7 @@ public class JarCache {
     static String generateTmpDir(JarFile jarFile) throws IOException {
         String tmp = System.getProperty("java.io.tmpdir");
         Random random = new Random();
-        String dirName = String.format("easeagent-%s-%d", getAttribute(jarFile, "Agent-Version"), Math.abs(random.nextLong()));
+        String dirName = String.format("agentx-%s-%d", getAttribute(jarFile, "Agent-Version"), Math.abs(random.nextLong()));
         if (tmp != null && !tmp.endsWith(File.separator)) {
             tmp += File.separator;
         }

@@ -113,11 +113,11 @@
                             <relocations>
                                 <relocation>
                                     <pattern>com.google</pattern>
-                                    <shadedPattern>com.github.mawen12.easeagent.shaded.com.google</shadedPattern>
+                                    <shadedPattern>com.github.mawen12.agentx.shaded.com.google</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.codahale</pattern>
-                                    <shadedPattern>com.github.mawen12.easeagent.shaded.com.codahale</shadedPattern>
+                                    <shadedPattern>com.github.mawen12.agentx.shaded.com.codahale</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
@@ -135,8 +135,8 @@
                     </descriptors>
                     <archive>
                         <manifestEntries>
-                            <Premain-Class>com.github.mawen12.easeagent.loader.Main</Premain-Class>
-                            <Bootstrap-Class>com.github.mawen12.easeagent.core.Bootstrap</Bootstrap-Class>
+                            <Premain-Class>com.github.mawen12.agentx.loader.Main</Premain-Class>
+                            <Bootstrap-Class>com.github.mawen12.agentx.core.Bootstrap</Bootstrap-Class>
                             <Agent-Version>${project.version}</Agent-Version>
                             <Can-Redefine-Classes>true</Can-Redefine-Classes>
                             <Can-Retransform-Classes>true</Can-Retransform-Classes>

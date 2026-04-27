@@ -2,18 +2,26 @@ package com.github.mawen12.agentx.core;
 
 import com.github.mawen12.agentx.api.Agent;
 import com.github.mawen12.agentx.api.logging.Logger;
-import com.github.mawen12.agentx.api.metric.MetricRegistryManager;
+import com.github.mawen12.agentx.api.spi.BeanProvider;
+import com.github.mawen12.agentx.core.agent.AgentIgnore;
+import com.github.mawen12.agentx.core.agent.AgentListener;
+import com.github.mawen12.agentx.core.agent.ClassTransformer;
 import com.github.mawen12.agentx.core.config.ConfigFactory;
 import com.github.mawen12.agentx.core.context.ContextManagerImpl;
 import com.github.mawen12.agentx.core.logging.AgentLogger;
 import com.github.mawen12.agentx.core.logging.AgentLoggerFactory;
 import com.github.mawen12.agentx.core.metric.MetricRegistryManagerImpl;
+import com.github.mawen12.agentx.core.metric.prometheus.MetricServer;
 import com.github.mawen12.agentx.core.utils.NetUtils;
+import com.github.mawen12.agentx.core.utils.ServiceLoaderUtils;
+import net.bytebuddy.agent.builder.AgentBuilder;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
 
 import java.lang.instrument.Instrumentation;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Bootstrap {
     private static final Logger LOGGER = new AgentLogger(LogManager.getLogger(Bootstrap.class));
@@ -41,7 +49,32 @@ public class Bootstrap {
 
         Agent.metricRegistryManager = MetricRegistryManagerImpl.build();
 
-        // todo
+        new MetricServer(19090).start();
+
+        AgentBuilder agentBuilder = new AgentBuilder.Default()
+                .with(AgentListener.INSTANCE)
+                .ignore(AgentIgnore.ignored());
+
+        List<BeanProvider> beanProviders = ServiceLoaderUtils.load(BeanProvider.class);
+        for (BeanProvider beanProvider : beanProviders) {
+            Agent.addListener(beanProvider.onState(), beanProvider::afterPropertiesSet);
+            LOGGER.info("register BeanProvider: {} on {}", beanProvider.getClass().getSimpleName(), beanProvider.onState().name());
+        }
+
+        Agent.markStart();
+
+        List<ClassTransformer> transformers = ServiceLoaderUtils.load(ClassTransformer.class);
+        for (ClassTransformer transformer : transformers) {
+            agentBuilder = transformer.build(agentBuilder);
+            LOGGER.info("register ClassTransformer: {}", transformer.getClass().getSimpleName());
+        }
+
+        long installBegin = System.currentTimeMillis();
+        agentBuilder.installOn(inst);
+
+        LOGGER.info("installBegin use time: {}ms", (System.currentTimeMillis() - installBegin));
+
+        LOGGER.info("initialization has took {}ms", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - begin));
     }
 
     private static void initLoggerLevel() {

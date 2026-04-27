@@ -1,5 +1,7 @@
 package com.github.mawen12.agentx.core.plugins.tomcat.metric;
 
+import com.github.mawen12.agentx.api.Agent;
+import com.github.mawen12.agentx.api.logging.Logger;
 import com.github.mawen12.agentx.api.metric.*;
 import com.github.mawen12.agentx.api.utils.ScheduleHelper;
 
@@ -14,6 +16,7 @@ import java.util.Set;
 import static com.github.mawen12.agentx.api.metric.Metric.SubType.DEFAULT;
 
 public class TomcatMetric extends ServiceMetric implements Runnable {
+    private static final Logger LOGGER = Agent.getLogger(TomcatMetric.class);
 
     private MBeanServer mbs;
     private ObjectName name;
@@ -34,16 +37,17 @@ public class TomcatMetric extends ServiceMetric implements Runnable {
     }
 
     public void init() {
-        System.out.println("Tomcat Metric init");
+        LOGGER.info("Tomcat Metric init");
         this.mbs = ManagementFactory.getPlatformMBeanServer();
 
         try {
             Set<ObjectName> names = mbs.queryNames(new ObjectName("Tomcat:type=ThreadPool,*"), null);
             if (names != null && names.size() == 1) {
                 this.name = names.iterator().next();
-                System.out.println("Tomcat Metric name is " + this.name.getCanonicalName());
+                LOGGER.info("Tomcat Metric name is {}", this.name.getCanonicalName());
             }
         } catch (MalformedObjectNameException e) {
+            LOGGER.warn("Tomcat Metric name fetch failed", e);
         }
     }
 
@@ -65,7 +69,7 @@ public class TomcatMetric extends ServiceMetric implements Runnable {
 
                 metricRegistry.gauge(metricName.getName(), () -> gauge);
             } catch (Exception e) {
-                System.err.println("fetch tomcat metric err " + e.getMessage());
+                LOGGER.warn("fetch tomcat metric err", e);
             }
         }
     }

@@ -1,7 +1,10 @@
 package com.github.mawen12.agentx.core.plugins.jdbc.common;
 
 import com.github.mawen12.agentx.api.context.Context;
-import com.github.mawen12.agentx.api.metric.*;
+import com.github.mawen12.agentx.api.metric.Meter;
+import com.github.mawen12.agentx.api.metric.MetricRegistry;
+import com.github.mawen12.agentx.api.metric.NameFactory;
+import com.github.mawen12.agentx.api.metric.ServiceMetric;
 import com.github.mawen12.agentx.api.utils.ContextUtils;
 import com.github.mawen12.agentx.core.metric.LastMinutesCounterGauge;
 

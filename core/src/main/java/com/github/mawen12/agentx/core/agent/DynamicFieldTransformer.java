@@ -1,6 +1,9 @@
 package com.github.mawen12.agentx.core.agent;
 
+import com.github.mawen12.agentx.api.Agent;
 import com.github.mawen12.agentx.api.field.DynamicFieldAccessor;
+import com.github.mawen12.agentx.api.logging.Logger;
+import com.github.mawen12.agentx.core.Bootstrap;
 import net.bytebuddy.agent.builder.AgentBuilder;
 import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.description.type.TypeDescription;
@@ -12,6 +15,7 @@ import net.bytebuddy.utility.JavaModule;
 import java.security.ProtectionDomain;
 
 public class DynamicFieldTransformer implements AgentBuilder.Transformer {
+    private static final Logger LOGGER = Agent.getLogger(DynamicFieldTransformer.class);
 
     private final AgentBuilder.Transformer.ForAdvice transformer;
 
@@ -32,7 +36,7 @@ public class DynamicFieldTransformer implements AgentBuilder.Transformer {
                         .implement(DynamicFieldAccessor.class)
                         .intercept(FieldAccessor.ofField(DynamicFieldAccessor.FIELD_NAME));
             } catch (Exception e) {
-                System.err.println("[agent] type " + typeDescription.getName() + " already has field " + DynamicFieldAccessor.FIELD_NAME);
+                LOGGER.warn("agent type {} already has field {}", typeDescription.getName(), DynamicFieldAccessor.FIELD_NAME, e);
             }
             return transformer.transform(builder, typeDescription, classLoader, module, protectionDomain);
         } finally {

@@ -11,6 +11,7 @@ import com.github.mawen12.agentx.api.metric.NameFactory;
 import com.github.mawen12.agentx.api.metric.Tags;
 import com.github.mawen12.agentx.api.spi.BeanProvider;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,15 +27,23 @@ public class Agent {
 
 
     public static MetricRegistry newMetricRegistry(Tags tags, NameFactory nameFactory) {
-        // TODO
+        return metricRegistryManager.newMetricRegistry(tags, nameFactory);
     }
 
     public static Logger getLogger(String name) {
-        // TODO
+        return loggerFactory.getLogger(name);
     }
 
     public static Logger getLogger(Class<?> clazz) {
         return getLogger(clazz.getCanonicalName());
+    }
+
+    public static void addListener(BeanProvider.State state, BeanProvider.Listener listener) {
+        listeners.computeIfAbsent(state, k -> new ArrayList<>()).add(listener);
+    }
+
+    public static void markStart() {
+        notifyState(BeanProvider.State.Start);
     }
 
     public static void markSpringBootReady() {

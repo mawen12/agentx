@@ -1,18 +1,14 @@
 package com.github.mawen12.agentx.core.metric.prometheus;
 
-import com.github.mawen12.agentx.api.metric.*;
+import com.github.mawen12.agentx.api.metric.GaugeMetricModel;
 import com.github.mawen12.agentx.api.metric.Metric;
 import com.github.mawen12.agentx.api.metric.MetricName;
+import com.github.mawen12.agentx.api.metric.NameFactory;
 import com.github.mawen12.agentx.core.metric.CounterImpl;
 import com.github.mawen12.agentx.core.metric.HistogramImpl;
 import com.github.mawen12.agentx.core.metric.MeterImpl;
 import com.github.mawen12.agentx.core.metric.TimerImpl;
 import io.dropwizard.metrics5.*;
-import io.dropwizard.metrics5.Counter;
-import io.dropwizard.metrics5.Gauge;
-import io.dropwizard.metrics5.Histogram;
-import io.dropwizard.metrics5.Meter;
-import io.dropwizard.metrics5.MetricRegistry;
 import io.dropwizard.metrics5.Timer;
 import io.prometheus.client.Collector;
 import io.prometheus.client.dropwizard.samplebuilder.SampleBuilder;

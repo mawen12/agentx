@@ -2,7 +2,9 @@ package com.github.mawen12.agentx.api.utils;
 
 import lombok.NoArgsConstructor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @NoArgsConstructor
 public class Lists {

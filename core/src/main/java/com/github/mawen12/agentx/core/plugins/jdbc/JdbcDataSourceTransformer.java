@@ -15,10 +15,6 @@ import java.util.List;
 import java.util.Set;
 
 import static net.bytebuddy.matcher.ElementMatchers.*;
-import static net.bytebuddy.matcher.ElementMatchers.isPublic;
-import static net.bytebuddy.matcher.ElementMatchers.returns;
-import static net.bytebuddy.matcher.ElementMatchers.takesArgument;
-import static net.bytebuddy.matcher.ElementMatchers.takesArguments;
 
 @AutoService(ClassTransformer.class)
 public class JdbcDataSourceTransformer extends AbstractClassTransformer {

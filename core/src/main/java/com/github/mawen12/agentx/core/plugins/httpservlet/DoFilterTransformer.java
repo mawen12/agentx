@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Set;
 
 import static net.bytebuddy.matcher.ElementMatchers.*;
-import static net.bytebuddy.matcher.ElementMatchers.named;
 
 @AutoService(ClassTransformer.class)
 public class DoFilterTransformer extends AbstractClassTransformer {
