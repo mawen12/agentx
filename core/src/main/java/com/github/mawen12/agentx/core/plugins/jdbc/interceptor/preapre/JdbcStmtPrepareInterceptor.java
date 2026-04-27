@@ -12,7 +12,7 @@ import com.github.mawen12.agentx.core.plugins.jdbc.common.SqlInfo;
 import java.sql.Statement;
 
 public enum JdbcStmtPrepareInterceptor implements NonReentrantInterceptor {
-    INSTANCE, SqlInfo;
+    INSTANCE;
 
     private static final Logger LOGGER = Agent.getLogger(JdbcStmtPrepareInterceptor.class);
 
