@@ -9,10 +9,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MetricRegistryImpl implements MetricRegistry {
 
-    private final io.dropwizard.metrics5.MetricRegistry metricRegistry;
+    private final com.codahale.metrics.MetricRegistry metricRegistry;
     private final Map<String, Metric> metricCache = new HashMap<>();
 
-    public static MetricRegistry build(io.dropwizard.metrics5.MetricRegistry metricRegistry) {
+    public static MetricRegistry build(com.codahale.metrics.MetricRegistry metricRegistry) {
         return metricRegistry == null ? MetricRegistry.NOOP : new MetricRegistryImpl(metricRegistry);
     }
 
@@ -38,7 +38,7 @@ public class MetricRegistryImpl implements MetricRegistry {
 
     @Override
     public <T> Gauge<T> gauge(String name, MetricSupplier<Gauge<T>> supplier) {
-        return getOrCreate(name, () -> metricRegistry.gauge(io.dropwizard.metrics5.MetricName.build(name), () -> GaugeImpl.build(supplier.newMetric())).getGauge());
+        return getOrCreate(name, () -> metricRegistry.gauge(name, () -> GaugeImpl.build(supplier.newMetric())).getGauge());
     }
 
     private <T extends Metric> T getOrCreate(String name, MetricSupplier<T> supplier) {

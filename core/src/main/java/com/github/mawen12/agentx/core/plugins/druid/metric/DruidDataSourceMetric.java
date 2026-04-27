@@ -26,7 +26,7 @@ public class DruidDataSourceMetric extends ServiceMetric implements Runnable {
     }
 
     public static void buildAndRun() {
-        Tags tags = new Tags("app", "druid-pool", "resource");
+        Tags tags = new Tags("app", "druid-pool", "resource", "Druid ");
         DruidDataSourceMetric metric = ServiceMetricRegistry.getOrCreate(tags, DruidNameFactory.INSTANCE.nameFactory(), DruidDataSourceMetric::new);
         metric.init();
 
@@ -49,8 +49,8 @@ public class DruidDataSourceMetric extends ServiceMetric implements Runnable {
     @Override
     public void run() {
         for (ObjectName name : names) {
-            io.dropwizard.metrics5.MetricName datasourceName = io.dropwizard.metrics5.MetricRegistry.name("datasources", name.getCanonicalName());
-            Map<Metric.SubType, MetricName> map = nameFactory.gaugeNames(datasourceName.getKey());
+            String datasourceName = com.codahale.metrics.MetricRegistry.name("datasources", name.getCanonicalName());
+            Map<Metric.SubType, MetricName> map = nameFactory.gaugeNames(datasourceName);
             for (Map.Entry<Metric.SubType, MetricName> entry : map.entrySet()) {
                 MetricName metricName = entry.getValue();
 

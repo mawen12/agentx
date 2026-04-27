@@ -1,7 +1,6 @@
 package com.github.mawen12.agentx.core.agent;
 
 import net.bytebuddy.agent.builder.AgentBuilder;
-import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.matcher.ElementMatcher;
 import net.bytebuddy.matcher.ElementMatchers;
@@ -15,7 +14,7 @@ public interface ClassTransformer {
 
     ElementMatcher.Junction<TypeDescription> getClassMatcher();
 
-    Set<ElementMatcher.Junction<MethodDescription>> getMethodMatchers();
+    Set<MethodMatcherWrapper> getMethodMatchers();
 
     AgentBuilder build(AgentBuilder builder);
 

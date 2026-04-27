@@ -17,13 +17,13 @@ public class MetricRegistryManagerImpl implements MetricRegistryManager {
     private final MetricRegistry metricRegistry;
 
     public static MetricRegistryManager build() {
-        io.dropwizard.metrics5.MetricRegistry mr = new io.dropwizard.metrics5.MetricRegistry();
+        com.codahale.metrics.MetricRegistry mr = new com.codahale.metrics.MetricRegistry();
         return new MetricRegistryManagerImpl(MetricRegistryImpl.build(mr));
     }
 
     @Override
     public MetricRegistry newMetricRegistry(Tags tags, NameFactory nameFactory) {
-        io.dropwizard.metrics5.MetricRegistry mr = new io.dropwizard.metrics5.MetricRegistry();
+        com.codahale.metrics.MetricRegistry mr = new com.codahale.metrics.MetricRegistry();
 
         AgentSampleBuilder sampleBuilder = new AgentSampleBuilder(additionalAttributes, tags);
         AgentPrometheusExports agentPrometheusExports = new AgentPrometheusExports(mr, nameFactory, sampleBuilder);

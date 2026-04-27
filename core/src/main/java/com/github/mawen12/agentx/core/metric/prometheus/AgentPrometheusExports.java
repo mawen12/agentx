@@ -1,5 +1,7 @@
 package com.github.mawen12.agentx.core.metric.prometheus;
 
+import com.codahale.metrics.*;
+import com.codahale.metrics.Timer;
 import com.github.mawen12.agentx.api.metric.GaugeMetricModel;
 import com.github.mawen12.agentx.api.metric.Metric;
 import com.github.mawen12.agentx.api.metric.MetricName;
@@ -8,8 +10,6 @@ import com.github.mawen12.agentx.core.metric.CounterImpl;
 import com.github.mawen12.agentx.core.metric.HistogramImpl;
 import com.github.mawen12.agentx.core.metric.MeterImpl;
 import com.github.mawen12.agentx.core.metric.TimerImpl;
-import io.dropwizard.metrics5.*;
-import io.dropwizard.metrics5.Timer;
 import io.prometheus.client.Collector;
 import io.prometheus.client.dropwizard.samplebuilder.SampleBuilder;
 
@@ -66,7 +66,7 @@ public class AgentPrometheusExports extends Collector implements Collector.Descr
         return Collections.emptyList();
     }
 
-    abstract class Exports<T extends io.dropwizard.metrics5.Metric> {
+    abstract class Exports<T extends com.codahale.metrics.Metric> {
         protected final Collector.Type type;
         protected final Class<?> clazz;
 
@@ -76,7 +76,7 @@ public class AgentPrometheusExports extends Collector implements Collector.Descr
         }
 
         protected void addToMap(Map<String, MetricFamilySamples> mfSamplesMap) {
-            SortedMap<io.dropwizard.metrics5.MetricName, T> metrics = getMetrics();
+            SortedMap<String, T> metrics = getMetrics();
             consumeMetrics(mfSamplesMap, metrics);
         }
 
@@ -109,9 +109,9 @@ public class AgentPrometheusExports extends Collector implements Collector.Descr
             return String.format("Generated from Dropwizard metric import (metric=%s, type=%s)", metricName, clazz.getName());
         }
 
-        protected abstract SortedMap<io.dropwizard.metrics5.MetricName, T> getMetrics();
+        protected abstract SortedMap<String, T> getMetrics();
 
-        protected abstract void consumeMetrics(Map<String, MetricFamilySamples> mfSamplesMap, SortedMap<io.dropwizard.metrics5.MetricName, T> metrics);
+        protected abstract void consumeMetrics(Map<String, MetricFamilySamples> mfSamplesMap, SortedMap<String, T> metrics);
     }
 
     class CounterExports extends Exports<Counter> {
@@ -120,14 +120,14 @@ public class AgentPrometheusExports extends Collector implements Collector.Descr
         }
 
         @Override
-        protected SortedMap<io.dropwizard.metrics5.MetricName, Counter> getMetrics() {
+        protected SortedMap<String, Counter> getMetrics() {
             return metricRegistry.getCounters(METRIC_FILTER);
         }
 
         @Override
-        protected void consumeMetrics(Map<String, MetricFamilySamples> mfSamplesMap, SortedMap<io.dropwizard.metrics5.MetricName, Counter> metrics) {
-            for (Map.Entry<io.dropwizard.metrics5.MetricName, Counter> entry : metrics.entrySet()) {
-                MetricName metricName = MetricName.metricNameFor(entry.getKey().getKey());
+        protected void consumeMetrics(Map<String, MetricFamilySamples> mfSamplesMap, SortedMap<String, Counter> metrics) {
+            for (Map.Entry<String, Counter> entry : metrics.entrySet()) {
+                MetricName metricName = MetricName.metricNameFor(entry.getKey());
                 Map<Metric.SubType, MetricName> map = nameFactory.counterNames(metricName.getKey());
                 MetricName actualMetricName = map.get(metricName.getMetricSubType());
 
@@ -142,14 +142,14 @@ public class AgentPrometheusExports extends Collector implements Collector.Descr
         }
 
         @Override
-        protected SortedMap<io.dropwizard.metrics5.MetricName, Timer> getMetrics() {
+        protected SortedMap<String, Timer> getMetrics() {
             return metricRegistry.getTimers(METRIC_FILTER);
         }
 
         @Override
-        protected void consumeMetrics(Map<String, MetricFamilySamples> mfSamplesMap, SortedMap<io.dropwizard.metrics5.MetricName, Timer> metrics) {
-            for (Map.Entry<io.dropwizard.metrics5.MetricName, Timer> entry : metrics.entrySet()) {
-                MetricName metricName = MetricName.metricNameFor(entry.getKey().getKey());
+        protected void consumeMetrics(Map<String, MetricFamilySamples> mfSamplesMap, SortedMap<String, Timer> metrics) {
+            for (Map.Entry<String, Timer> entry : metrics.entrySet()) {
+                MetricName metricName = MetricName.metricNameFor(entry.getKey());
                 Map<Metric.SubType, MetricName> map = nameFactory.timerNames(metricName.getKey());
                 MetricName actualMetricName = map.get(metricName.getMetricSubType());
 
@@ -164,14 +164,14 @@ public class AgentPrometheusExports extends Collector implements Collector.Descr
         }
 
         @Override
-        protected SortedMap<io.dropwizard.metrics5.MetricName, Meter> getMetrics() {
+        protected SortedMap<String, Meter> getMetrics() {
             return metricRegistry.getMeters(METRIC_FILTER);
         }
 
         @Override
-        protected void consumeMetrics(Map<String, MetricFamilySamples> mfSamplesMap, SortedMap<io.dropwizard.metrics5.MetricName, Meter> metrics) {
-            for (Map.Entry<io.dropwizard.metrics5.MetricName, Meter> entry : metrics.entrySet()) {
-                MetricName metricName = MetricName.metricNameFor(entry.getKey().getKey());
+        protected void consumeMetrics(Map<String, MetricFamilySamples> mfSamplesMap, SortedMap<String, Meter> metrics) {
+            for (Map.Entry<String, Meter> entry : metrics.entrySet()) {
+                MetricName metricName = MetricName.metricNameFor(entry.getKey());
                 Map<Metric.SubType, MetricName> map = nameFactory.meterNames(metricName.getKey());
                 MetricName actualMetricName = map.get(metricName.getMetricSubType());
 
@@ -186,14 +186,14 @@ public class AgentPrometheusExports extends Collector implements Collector.Descr
         }
 
         @Override
-        protected SortedMap<io.dropwizard.metrics5.MetricName, Histogram> getMetrics() {
+        protected SortedMap<String, Histogram> getMetrics() {
             return metricRegistry.getHistograms(METRIC_FILTER);
         }
 
         @Override
-        protected void consumeMetrics(Map<String, MetricFamilySamples> mfSamplesMap, SortedMap<io.dropwizard.metrics5.MetricName, Histogram> metrics) {
-            for (Map.Entry<io.dropwizard.metrics5.MetricName, Histogram> entry : metrics.entrySet()) {
-                MetricName metricName = MetricName.metricNameFor(entry.getKey().getKey());
+        protected void consumeMetrics(Map<String, MetricFamilySamples> mfSamplesMap, SortedMap<String, Histogram> metrics) {
+            for (Map.Entry<String, Histogram> entry : metrics.entrySet()) {
+                MetricName metricName = MetricName.metricNameFor(entry.getKey());
                 Map<Metric.SubType, MetricName> map = nameFactory.histogramNames(metricName.getKey());
                 MetricName actualMetricName = map.get(metricName.getMetricSubType());
 
@@ -202,20 +202,20 @@ public class AgentPrometheusExports extends Collector implements Collector.Descr
         }
     }
 
-    class GaugeExports extends Exports<Gauge<?>> {
+    class GaugeExports extends Exports<Gauge> {
         public GaugeExports() {
             super(Type.GAUGE, Histogram.class);
         }
 
         @Override
-        protected SortedMap<io.dropwizard.metrics5.MetricName, Gauge<?>> getMetrics() {
+        protected SortedMap<String, Gauge> getMetrics() {
             return metricRegistry.getGauges(METRIC_FILTER);
         }
 
         @Override
-        protected void consumeMetrics(Map<String, MetricFamilySamples> mfSamplesMap, SortedMap<io.dropwizard.metrics5.MetricName, Gauge<?>> metrics) {
-            for (Map.Entry<io.dropwizard.metrics5.MetricName, Gauge<?>> entry : metrics.entrySet()) {
-                MetricName metricName = MetricName.metricNameFor(entry.getKey().getKey());
+        protected void consumeMetrics(Map<String, MetricFamilySamples> mfSamplesMap, SortedMap<String, Gauge> metrics) {
+            for (Map.Entry<String, Gauge> entry : metrics.entrySet()) {
+                MetricName metricName = MetricName.metricNameFor(entry.getKey());
                 Map<Metric.SubType, MetricName> map = nameFactory.gaugeNames(metricName.getKey());
                 MetricName actualMetricName = map.get(metricName.getMetricSubType());
 

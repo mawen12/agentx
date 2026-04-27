@@ -4,14 +4,14 @@ import com.github.mawen12.agentx.api.metric.Histogram;
 
 public class HistogramImpl extends AbstractSnapshot implements Histogram {
 
-    private final io.dropwizard.metrics5.Histogram histogram;
+    private final com.codahale.metrics.Histogram histogram;
 
-    private HistogramImpl(io.dropwizard.metrics5.Histogram histogram) {
+    private HistogramImpl(com.codahale.metrics.Histogram histogram) {
         super(histogram.getSnapshot());
         this.histogram = histogram;
     }
 
-    public static Histogram build(io.dropwizard.metrics5.Histogram histogram) {
+    public static Histogram build(com.codahale.metrics.Histogram histogram) {
         return histogram == null ? Histogram.NOOP : new HistogramImpl(histogram);
     }
 

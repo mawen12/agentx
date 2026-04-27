@@ -19,7 +19,7 @@ public enum AgentListener implements AgentBuilder.Listener {
 
     @Override
     public void onTransformation(TypeDescription typeDescription, ClassLoader classLoader, JavaModule module, boolean loaded, DynamicType dynamicType) {
-        LOGGER.debug("onTransformation: {] loaded: {} from classLoader {}", typeDescription, loaded, classLoader);
+        LOGGER.debug("onTransformation: {} loaded: {} from classLoader {}", typeDescription, loaded, classLoader);
     }
 
     @Override
@@ -29,7 +29,7 @@ public enum AgentListener implements AgentBuilder.Listener {
 
     @Override
     public void onError(String typeName, ClassLoader classLoader, JavaModule module, boolean loaded, Throwable throwable) {
-        LOGGER.debug("Just for Debug-log, transform ends exceptionally, which is sometimes normal and sometimes there is an error: {} error: {} loaded: {} form classLoader {}",
+        LOGGER.warn("transform ends exceptionally, which is sometimes normal and sometimes there is an error: {} error: {} loaded: {} form classLoader {}",
                 typeName, throwable, loaded, classLoader);
     }
 

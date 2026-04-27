@@ -35,9 +35,9 @@ public class JvmMemoryMetric extends ServiceMetric implements Runnable {
             String name = bean.getName();
             MemoryUsage usage = bean.getUsage();
 
-            io.dropwizard.metrics5.MetricName poolName = io.dropwizard.metrics5.MetricRegistry.name("pools", WHITESPACE.matcher(name).replaceAll("-"));
+            String poolName = com.codahale.metrics.MetricRegistry.name("pools", WHITESPACE.matcher(name).replaceAll("-"));
 
-            Map<Metric.SubType, MetricName> map = nameFactory.gaugeNames(poolName.getKey());
+            Map<Metric.SubType, MetricName> map = nameFactory.gaugeNames(poolName);
             for (Map.Entry<Metric.SubType, MetricName> entry : map.entrySet()) {
                 MetricName metricName = entry.getValue();
 

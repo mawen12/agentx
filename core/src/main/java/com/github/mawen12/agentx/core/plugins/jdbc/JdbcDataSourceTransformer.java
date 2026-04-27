@@ -5,9 +5,9 @@ import com.github.mawen12.agentx.api.utils.Lists;
 import com.github.mawen12.agentx.api.utils.Sets;
 import com.github.mawen12.agentx.core.agent.AbstractClassTransformer;
 import com.github.mawen12.agentx.core.agent.ClassTransformer;
+import com.github.mawen12.agentx.core.agent.MethodMatcherWrapper;
 import com.github.mawen12.agentx.core.plugins.jdbc.interceptor.metric.JdbcDataSourceMetricInterceptor;
 import com.google.auto.service.AutoService;
-import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.matcher.ElementMatcher;
 
@@ -35,17 +35,19 @@ public class JdbcDataSourceTransformer extends AbstractClassTransformer {
     }
 
     @Override
-    public Set<ElementMatcher.Junction<MethodDescription>> getMethodMatchers() {
+    public Set<MethodMatcherWrapper> getMethodMatchers() {
         return Sets.of(
-                named("getConnection")
-                        .and(isPublic())
-                        .and(returns(hasSuperType(named("java.sql.Connection"))))
-                        .and(takesArguments(0)),
-                named("getConnection")
-                        .and(isPublic())
-                        .and(returns(hasSuperType(named("java.sql.Connection"))))
-                        .and(takesArgument(0, named("java.lang.String")))
-                        .and(takesArgument(1, named("java.lang.String")))
+                MethodMatcherWrapper.ofMethod(
+                        named("getConnection")
+                                .and(isPublic())
+                                .and(returns(hasSuperType(named("java.sql.Connection"))))
+                                .and(takesArguments(0))),
+                MethodMatcherWrapper.ofMethod(
+                        named("getConnection")
+                                .and(isPublic())
+                                .and(returns(hasSuperType(named("java.sql.Connection"))))
+                                .and(takesArgument(0, named("java.lang.String")))
+                                .and(takesArgument(1, named("java.lang.String"))))
         );
     }
 }

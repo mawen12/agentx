@@ -5,9 +5,9 @@ import com.github.mawen12.agentx.api.utils.Lists;
 import com.github.mawen12.agentx.api.utils.Sets;
 import com.github.mawen12.agentx.core.agent.AbstractClassTransformer;
 import com.github.mawen12.agentx.core.agent.ClassTransformer;
+import com.github.mawen12.agentx.core.agent.MethodMatcherWrapper;
 import com.github.mawen12.agentx.core.plugins.jdbc.interceptor.preapre.JdbcConnPrepareOrCreateStmtInterceptor;
 import com.google.auto.service.AutoService;
-import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.matcher.ElementMatcher;
 
@@ -35,11 +35,13 @@ public class JdbcConnTransformer extends AbstractClassTransformer {
     }
 
     @Override
-    public Set<ElementMatcher.Junction<MethodDescription>> getMethodMatchers() {
+    public Set<MethodMatcherWrapper> getMethodMatchers() {
         return Sets.of(
-                named("createStatement").and(isPublic())
-                        .or(named("prepareCall").and(isPublic()))
-                        .or(named("prepareStatement").and(isPublic()))
+                MethodMatcherWrapper.ofMethod(
+                        named("createStatement").and(isPublic())
+                                .or(named("prepareCall").and(isPublic()))
+                                .or(named("prepareStatement").and(isPublic()))
+                )
         );
     }
 }

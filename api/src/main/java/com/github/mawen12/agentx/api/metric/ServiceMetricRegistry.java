@@ -8,7 +8,7 @@ import java.util.function.BiFunction;
 
 public class ServiceMetricRegistry {
 
-    public static final ConcurrentMap<Tags, ServiceMetric> INSTANCES = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<Tags, ServiceMetric> INSTANCES = new ConcurrentHashMap<>();
 
     public static <T extends ServiceMetric> T getOrCreate(Tags tags, NameFactory nameFactory, BiFunction<MetricRegistry, NameFactory, T> supplier) {
         ServiceMetric metric = INSTANCES.get(tags);

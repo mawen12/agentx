@@ -32,6 +32,6 @@ public class MetricName {
     }
 
     public static String toName(Metric.SubType metricSubType, String key, Metric.Type metricType) {
-        return metricSubType.getCode() + metricSubType.ordinal() + key;
+        return metricSubType.getCode() + metricType.ordinal() + key;
     }
 }

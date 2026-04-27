@@ -7,9 +7,9 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class MeterImpl implements Meter {
 
-    private final io.dropwizard.metrics5.Meter meter;
+    private final com.codahale.metrics.Meter meter;
 
-    public static Meter build(io.dropwizard.metrics5.Meter meter) {
+    public static Meter build(com.codahale.metrics.Meter meter) {
         return meter == null ? Meter.NOOP : new MeterImpl(meter);
     }
 

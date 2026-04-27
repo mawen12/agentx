@@ -1,45 +1,42 @@
-package com.github.mawen12.agentx.core.plugins.springboot;
+package com.github.mawen12.agentx.core.plugins.druid;
 
 import com.github.mawen12.agentx.api.interceptor.Interceptor;
-import com.github.mawen12.agentx.api.utils.Lists;
-import com.github.mawen12.agentx.api.utils.Sets;
 import com.github.mawen12.agentx.core.agent.AbstractClassTransformer;
 import com.github.mawen12.agentx.core.agent.ClassTransformer;
 import com.github.mawen12.agentx.core.agent.MethodMatcherWrapper;
-import com.github.mawen12.agentx.core.plugins.springboot.interceptor.SpringBootReadyPrepareInterceptor;
+import com.github.mawen12.agentx.core.plugins.druid.metric.DruidDataSourceInterceptor;
 import com.google.auto.service.AutoService;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.matcher.ElementMatcher;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import static net.bytebuddy.matcher.ElementMatchers.*;
 
 @AutoService(ClassTransformer.class)
-public class SpringBootReadyEventTransformer extends AbstractClassTransformer {
+public class DruidDataSourceTransformer extends AbstractClassTransformer {
 
     @Override
     protected String getAdviceKey() {
-        return SpringBootReadyEventTransformer.class.getName();
+        return DruidDataSourceTransformer.class.getName();
     }
 
     @Override
     protected List<Interceptor> getInterceptors() {
-        return Lists.of(SpringBootReadyPrepareInterceptor.INSTANCE);
+        return Collections.singletonList(DruidDataSourceInterceptor.INSTANCE);
     }
 
     @Override
     public ElementMatcher.Junction<TypeDescription> getClassMatcher() {
-        return hasSuperType(named("org.springframework.context.ApplicationEventPublisher"));
+        return named("com.alibaba.druid.pool.DruidDataSource");
     }
 
     @Override
     public Set<MethodMatcherWrapper> getMethodMatchers() {
-        return Sets.of(
-                MethodMatcherWrapper.ofMethod(
-                        named("publishEvent").and(takesArguments(1))
-                )
-        );
+        return Collections.singleton(MethodMatcherWrapper.ofConstructor(
+                isConstructor().and(takesArguments(1))
+        ));
     }
 }

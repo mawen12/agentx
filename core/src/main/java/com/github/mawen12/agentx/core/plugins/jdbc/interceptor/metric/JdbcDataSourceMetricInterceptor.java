@@ -39,7 +39,7 @@ public class JdbcDataSourceMetricInterceptor implements NonReentrantInterceptor 
             key = JdbcUtils.getUrl(conn);
         }
 
-        metric.collectMetric(key, success, ctx);
+
     }
 
     @Override

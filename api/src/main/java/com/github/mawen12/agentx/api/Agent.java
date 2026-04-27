@@ -25,6 +25,9 @@ public class Agent {
     public static Map<BeanProvider.State, List<BeanProvider.Listener>> listeners = new HashMap<>();
     public static Map<String, Object> additionalAttributes = new HashMap<>();
 
+    public static Context getContext() {
+        return contextManager.getContext();
+    }
 
     public static MetricRegistry newMetricRegistry(Tags tags, NameFactory nameFactory) {
         return metricRegistryManager.newMetricRegistry(tags, nameFactory);

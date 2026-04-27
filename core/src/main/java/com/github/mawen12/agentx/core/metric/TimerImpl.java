@@ -7,14 +7,14 @@ import java.util.concurrent.TimeUnit;
 
 public class TimerImpl extends AbstractSnapshot implements Timer {
 
-    private final io.dropwizard.metrics5.Timer timer;
+    private final com.codahale.metrics.Timer timer;
 
-    public TimerImpl(io.dropwizard.metrics5.Timer timer) {
+    public TimerImpl(com.codahale.metrics.Timer timer) {
         super(timer.getSnapshot());
         this.timer = timer;
     }
 
-    public static Timer build(io.dropwizard.metrics5.Timer timer) {
+    public static Timer build(com.codahale.metrics.Timer timer) {
         return timer == null ? Timer.NOOP : new TimerImpl(timer);
     }
 

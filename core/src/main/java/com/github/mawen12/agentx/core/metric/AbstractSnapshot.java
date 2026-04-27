@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public abstract class AbstractSnapshot implements Snapshot {
 
-    private final io.dropwizard.metrics5.Snapshot snapshot;
+    private final com.codahale.metrics.Snapshot snapshot;
 
     @Override
     public double getValue(double quantile) {

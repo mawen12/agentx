@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class GaugeImpl<T> implements io.dropwizard.metrics5.Gauge<T> {
+public class GaugeImpl<T> implements com.codahale.metrics.Gauge<T> {
     private Gauge<T> gauge;
 
     public static <T> GaugeImpl<T> build(Gauge<T> gauge)  {

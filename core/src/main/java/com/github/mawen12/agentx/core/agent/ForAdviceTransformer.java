@@ -14,13 +14,13 @@ public class ForAdviceTransformer implements AgentBuilder.Transformer {
 
     private final ForAdvice advice;
 
-    public ForAdviceTransformer(ElementMatcher.Junction<MethodDescription> methodMatcher, String adviceKey) {
+    public ForAdviceTransformer(ElementMatcher.Junction<MethodDescription> methodMatcher, String adviceKey, Class<?> adviceClass) {
         AdviceKeyOffsetMapping.Factory factory = new AdviceKeyOffsetMapping.Factory(adviceKey);
         Advice.WithCustomMapping customMapping = Advice.withCustomMapping().bind(factory);
 
         this.advice = new ForAdvice(customMapping)
                 .include(getClass().getClassLoader())
-                .advice(methodMatcher, CommonInlineAdvice.class.getCanonicalName());
+                .advice(methodMatcher, adviceClass.getCanonicalName());
     }
 
     @Override

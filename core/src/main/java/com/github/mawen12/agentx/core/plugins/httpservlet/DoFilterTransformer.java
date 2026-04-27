@@ -5,9 +5,9 @@ import com.github.mawen12.agentx.api.utils.Lists;
 import com.github.mawen12.agentx.api.utils.Sets;
 import com.github.mawen12.agentx.core.agent.AbstractClassTransformer;
 import com.github.mawen12.agentx.core.agent.ClassTransformer;
+import com.github.mawen12.agentx.core.agent.MethodMatcherWrapper;
 import com.github.mawen12.agentx.core.plugins.httpservlet.interceptor.metric.DoFilterMetricInterceptor;
 import com.google.auto.service.AutoService;
-import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.matcher.ElementMatcher;
 
@@ -36,13 +36,15 @@ public class DoFilterTransformer extends AbstractClassTransformer {
     }
 
     @Override
-    public Set<ElementMatcher.Junction<MethodDescription>> getMethodMatchers() {
+    public Set<MethodMatcherWrapper> getMethodMatchers() {
         return Sets.of(
-                named("doFilter").and(takesArgument(0, named("javax.servlet.ServletRequest")))
-                        .and(takesArgument(1, named("javax.servlet.ServletResponse"))),
-                named("service").and(takesArgument(0, named("javax.servlet.ServletRequest")))
-                        .and(takesArgument(1, named("javax.servlet.ServletResponse")))
-                        .and(isDefaultMethod())
+                MethodMatcherWrapper.ofMethod(
+                        named("doFilter").and(takesArgument(0, named("javax.servlet.ServletRequest")))
+                                .and(takesArgument(1, named("javax.servlet.ServletResponse")))),
+                MethodMatcherWrapper.ofMethod(
+                        named("service").and(takesArgument(0, named("javax.servlet.ServletRequest")))
+                                .and(takesArgument(1, named("javax.servlet.ServletResponse")))
+                                .and(isDefaultMethod()))
         );
     }
 }

@@ -30,7 +30,7 @@ public abstract class AbstractClassTransformer implements ClassTransformer, Agen
 
         List<AgentBuilder.Transformer> transformers = this.getMethodMatchers()
                 .stream()
-                .map(methodMatcher -> new ForAdviceTransformer(methodMatcher, adviceKey))
+                .map(methodMatcher -> new ForAdviceTransformer(methodMatcher.getByteBuddyMatcher(), adviceKey, methodMatcher.isConstructor() ? ConstructorInlineAdvice.class  : CommonInlineAdvice.class))
                 .collect(Collectors.toList());
 
         if (this.addDynamicField()) {

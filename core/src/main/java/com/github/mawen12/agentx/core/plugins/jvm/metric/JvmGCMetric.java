@@ -1,5 +1,7 @@
 package com.github.mawen12.agentx.core.plugins.jvm.metric;
 
+import com.github.mawen12.agentx.api.Agent;
+import com.github.mawen12.agentx.api.logging.Logger;
 import com.github.mawen12.agentx.api.metric.*;
 import com.sun.management.GarbageCollectionNotificationInfo;
 import com.sun.management.GcInfo;
@@ -18,13 +20,14 @@ import static com.github.mawen12.agentx.api.metric.Metric.ValueFetcher.*;
 
 public class JvmGCMetric extends ServiceMetric {
     private static final String NO_GC = "No GC";
+    private static final Logger LOGGER = Agent.getLogger(JvmGCMetric.class);
 
     private JvmGCMetric(MetricRegistry metricRegistry, NameFactory nameFactory) {
         super(metricRegistry, nameFactory);
     }
 
     public static void buildAndRun() {
-        Tags tags = new Tags("app", "jvm-gc", "resource");
+        Tags tags = new Tags("app", "jvm-gc", "resource", "");
         JvmGCMetric metric = ServiceMetricRegistry.getOrCreate(tags, NameFactorySupplier.INSTANCE.nameFactory(), JvmGCMetric::new);
         metric.run();
     }
@@ -84,6 +87,7 @@ public class JvmGCMetric extends ServiceMetric {
 
             nameFactory.counterNames(gcName)
                     .forEach((type, name) -> {
+
                         Counter counter = metricRegistry.counter(name.getName());
                         if (!NO_GC.equals(gcCause)) {
                             counter.inc(duration);

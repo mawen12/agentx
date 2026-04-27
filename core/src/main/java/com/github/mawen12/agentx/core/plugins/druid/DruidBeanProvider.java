@@ -4,7 +4,7 @@ import com.github.mawen12.agentx.api.spi.BeanProvider;
 import com.github.mawen12.agentx.core.plugins.druid.metric.DruidDataSourceMetric;
 import com.google.auto.service.AutoService;
 
-@AutoService(BeanProvider.class)
+//@AutoService(BeanProvider.class)
 public class DruidBeanProvider implements BeanProvider {
 
     @Override

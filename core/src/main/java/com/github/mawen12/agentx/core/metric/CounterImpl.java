@@ -7,9 +7,9 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CounterImpl implements Counter {
 
-    private io.dropwizard.metrics5.Counter counter;
+    private com.codahale.metrics.Counter counter;
 
-    public static Counter build(io.dropwizard.metrics5.Counter counter) {
+    public static Counter build(com.codahale.metrics.Counter counter) {
         return counter == null ? Counter.NOOP : new CounterImpl(counter);
     }
 
