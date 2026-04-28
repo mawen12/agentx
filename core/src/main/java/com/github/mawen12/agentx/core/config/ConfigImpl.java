@@ -2,9 +2,12 @@ package com.github.mawen12.agentx.core.config;
 
 import com.github.mawen12.agentx.api.config.Config;
 import lombok.AllArgsConstructor;
+import lombok.ToString;
 
+import java.util.Collections;
 import java.util.Map;
 
+@ToString
 @AllArgsConstructor
 public class ConfigImpl implements Config {
 
@@ -16,54 +19,22 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public Integer getInt(String key) {
-        String value = source.get(key);
-        if (value == null) {
-            return null;
-        }
-
-        try {
-            return Integer.parseInt(value);
-        } catch (Exception e) {
-            return null;
-        }
+    public boolean hasConfig() {
+        return source != null && !source.isEmpty();
     }
 
     @Override
-    public Boolean getBoolean(String key) {
-        String value = source.get(key);
-        if (value == null) {
-            return null;
-        }
-
-        return value.equalsIgnoreCase("yes") || value.equalsIgnoreCase("true");
+    public Map<String, String> sources() {
+        return source;
     }
 
-    @Override
-    public Double getDouble(String key) {
-        String value = source.get(key);
-        if (value == null) {
-            return null;
-        }
-
-        try {
-            return Double.parseDouble(value);
-        } catch (Exception e) {
-            return null;
-        }
+    public void mergeConfigs(Map<String, String> configs) {
+        source.putAll(configs);
     }
 
-    @Override
-    public Long getLong(String key) {
-        String value = source.get(key);
-        if (value == null) {
-            return null;
-        }
-
-        try {
-            return Long.parseLong(value);
-        } catch (Exception e) {
-            return null;
+    public void mergeConfigs(Config config) {
+        if (config != null && config.hasConfig()) {
+            source.putAll(config.sources());
         }
     }
 }

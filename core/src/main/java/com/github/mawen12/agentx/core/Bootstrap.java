@@ -1,6 +1,7 @@
 package com.github.mawen12.agentx.core;
 
 import com.github.mawen12.agentx.api.Agent;
+import com.github.mawen12.agentx.api.config.Constants;
 import com.github.mawen12.agentx.api.logging.Logger;
 import com.github.mawen12.agentx.api.spi.BeanProvider;
 import com.github.mawen12.agentx.core.agent.AgentIgnore;
@@ -19,8 +20,10 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
 
+import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class Bootstrap {
@@ -31,25 +34,18 @@ public class Bootstrap {
     public static void premain(String args, Instrumentation inst, String jarPath) throws Exception {
         long begin = System.nanoTime();
         Bootstrap.LOADER = Thread.currentThread().getContextClassLoader();
-        Agent.config = ConfigFactory.loadConfig(jarPath, Bootstrap.LOADER);
 
-        initLoggerLevel();
+        initConfig(jarPath);
 
-        LOGGER.info("agent premain start, jarPath: {}", jarPath);
+        LOGGER.info("config <{}> is {}", jarPath, Agent.config);
 
-        Agent.loggerFactory = new AgentLoggerFactory();
-        if (Agent.config != null) {
-            Agent.additionalAttributes.put("service", Agent.config.getString("name"));
-            Agent.additionalAttributes.put("system", Agent.config.getString("system"));
-            Agent.additionalAttributes.put("host_ipv4", NetUtils.getHostIpV4());
-            Agent.additionalAttributes.put("host_name", NetUtils.getHostName());
-        }
+        initLogger();
 
         Agent.contextManager = ContextManagerImpl.build();
 
         Agent.metricRegistryManager = MetricRegistryManagerImpl.build();
 
-        new MetricServer(19090).start();
+        buildServer();
 
         AgentBuilder agentBuilder = new AgentBuilder.Default()
                 .with(AgentListener.INSTANCE)
@@ -73,12 +69,25 @@ public class Bootstrap {
         agentBuilder.installOn(inst);
 
         LOGGER.info("installBegin use time: {}ms", (System.currentTimeMillis() - installBegin));
-
         LOGGER.info("initialization has took {}ms", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - begin));
     }
 
+    private static void initConfig(String jarPath) {
+        Agent.config = ConfigFactory.loadConfig(jarPath);
+
+        Agent.additionalAttributes.put("service", Agent.config.getString(Constants.CONFIG_NAME));
+        Agent.additionalAttributes.put("system", Agent.config.getString(Constants.CONFIG_SYSTEM));
+        Agent.additionalAttributes.put("host_ipv4", NetUtils.getHostIpV4());
+        Agent.additionalAttributes.put("host_name", NetUtils.getHostName());
+    }
+
+    private static void initLogger() {
+        initLoggerLevel();
+        initLoggerFactory();
+    }
+
     private static void initLoggerLevel() {
-        String level = Agent.config.getString("logging.level");
+        String level = Agent.config.getString(Constants.CONFIG_LOGGING_LEVEL);
         Level loggerLevel = Level.INFO;
         switch (level) {
             case "OFF":
@@ -104,5 +113,16 @@ public class Bootstrap {
         }
 
         Configurator.setLevel("com.github.mawen12.agentx", loggerLevel);
+    }
+
+    private static void initLoggerFactory() {
+        Agent.loggerFactory = new AgentLoggerFactory();
+    }
+
+    private static void buildServer() throws IOException {
+        if (Objects.equals(true, Agent.config.getBoolean(Constants.CONFIG_AGENT_SERVER_ENABLED))) {
+            Integer port = Agent.config.getInt(Constants.CONFIG_AGENT_SERVER_PORT);
+            new MetricServer(port).start();
+        }
     }
 }

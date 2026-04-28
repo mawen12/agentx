@@ -1,53 +1,76 @@
 package com.github.mawen12.agentx.core.config;
 
 import com.github.mawen12.agentx.api.config.Config;
+import com.github.mawen12.agentx.api.logging.Logger;
+import com.github.mawen12.agentx.api.logging.LoggerFactory;
+import com.github.mawen12.agentx.core.Bootstrap;
+import com.github.mawen12.agentx.core.logging.AgentLogger;
+import com.github.mawen12.agentx.core.utils.StringUtils;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
 public class ConfigFactory {
+    private static final Logger LOGGER = new AgentLogger(LogManager.getLogger(ConfigFactory.class));
+
     public static final String CONFIG_PATH_PROPERTY = "agent.config.path";
     public static final String CONFIG_PATH_ENV = "AGENT_CONFIG_PATH";
     public static final String DEFAULT_CONFIG_PATH = "agent.properties";
+    public static final Map<String, String> CUSTOM_CONFIG_KEYS = ImmutableMap.<String, String>builder()
+            .put("AGENT_NAME", "agent.name")
+            .put("AGENT_SYSTEM", "agent.system")
+            .put("AGENT_SERVER_PORT", "agent.server.port")
+            .put("AGENT_SERVER_ENABLED", "agent.server.enabled")
+            .build();
 
-    public static String getConfigPath() {
-        String value = System.getProperty(CONFIG_PATH_PROPERTY);
-        if (value != null) {
-            return value;
+    public static Config loadConfig(String jarPath) {
+        ConfigImpl defaultConfig = loadDefaultConfig(jarPath, DEFAULT_CONFIG_PATH);
+
+        String customConfigPath = getConfigPath();
+        if (!StringUtils.isEmpty(customConfigPath)) {
+            Config customConfig = loadFromFile(new File(customConfigPath));
+            defaultConfig.mergeConfigs(customConfig);
         }
 
-        value = System.getenv(CONFIG_PATH_ENV);
-        if (value != null) {
-            return value;
-        }
+        Config envConfig = loadEnvConfig();
+        defaultConfig.mergeConfigs(envConfig);
 
-        return DEFAULT_CONFIG_PATH;
+        return defaultConfig;
     }
 
-    public static Config loadConfig(String jarPath, ClassLoader loader) {
-        String configPath = getConfigPath();
-        try {
-            JarFile jarFile = new JarFile(new File(jarPath));
-            ZipEntry zipEntry = jarFile.getEntry(configPath);
+    private static ConfigImpl loadDefaultConfig(String jarPath, String configFileName) {
+        try (JarFile jarFile = new JarFile(new File(jarPath))) {
+            ZipEntry zipEntry = jarFile.getEntry(configFileName);
             if (zipEntry == null) {
                 return null;
             }
 
             try (InputStream in = jarFile.getInputStream(zipEntry)) {
-                return loadFromStream(in, configPath);
+                return loadFromStream(in);
             }
         } catch (Exception e) {
         }
         return null;
     }
 
-    static Config loadFromStream(InputStream in, String fileName) throws IOException {
+    private static String getConfigPath() {
+        String value = System.getProperty(CONFIG_PATH_PROPERTY);
+        if (value != null) {
+            return value;
+        }
+
+        return System.getenv(CONFIG_PATH_ENV);
+    }
+
+    private static ConfigImpl loadFromStream(InputStream in) throws IOException {
         if (in != null) {
             Properties properties = new Properties();
             properties.load(in);
@@ -58,6 +81,36 @@ public class ConfigFactory {
             }
             return new ConfigImpl(map);
         }
-        return null;
+
+        return new ConfigImpl(Collections.emptyMap());
+    }
+
+    private static Config loadFromFile(File configFile) {
+        try (FileInputStream in = new FileInputStream(configFile)) {
+            return loadFromStream(in);
+        } catch (IOException e) {
+            LOGGER.warn("Load config file failure: {}", configFile.getAbsolutePath(), e);
+        }
+
+        return new ConfigImpl(Collections.emptyMap());
+    }
+
+    private static Config loadEnvConfig() {
+        Map<String, String> envConfig = new HashMap<>();
+
+        for (Map.Entry<String, String> entry : CUSTOM_CONFIG_KEYS.entrySet()) {
+            String configKey = entry.getValue().replaceFirst("agent.", "");
+            String value = System.getenv(entry.getKey());
+            if (!StringUtils.isEmpty(value)) {
+                envConfig.put(configKey, value);
+            }
+
+            value = System.getProperty(entry.getValue());
+            if (!StringUtils.isEmpty(value)) {
+                envConfig.put(configKey, value);
+            }
+        }
+
+        return new ConfigImpl(envConfig);
     }
 }

@@ -18,4 +18,8 @@ public class StringUtils {
         }
         return new String(tmp.toCharArray(), 0, tmp.length() - 1);
     }
+
+    public static boolean isEmpty(final CharSequence cs) {
+        return cs == null || cs.length() == 0;
+    }
 }
