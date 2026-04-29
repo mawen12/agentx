@@ -18,7 +18,5 @@ public interface AppLogDataReportable extends Reportable<AppLogData> {
         public void setSender(Sender sender) {
 
         }
-
-
     }
 }

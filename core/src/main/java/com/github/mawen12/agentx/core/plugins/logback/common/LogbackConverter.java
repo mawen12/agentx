@@ -7,6 +7,7 @@ import ch.qos.logback.classic.spi.ThrowableProxy;
 import com.github.mawen12.agentx.api.interceptor.MethodInfo;
 import com.github.mawen12.agentx.api.log.AppLogData;
 import com.github.mawen12.agentx.api.log.LogConverter;
+import com.github.mawen12.agentx.core.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -27,10 +28,10 @@ public enum LogbackConverter implements LogConverter {
 
         ILoggingEvent loggingEvent = (ILoggingEvent) args[0];
         String logger = loggingEvent.getLoggerName();
-        if (logger == null || logger.isEmpty()) {
+        if (StringUtils.isEmpty(logger)) {
             logger = "ROOT";
         }
-        builder.level(logger);
+        builder.logger(logger);
 
         Level level = loggingEvent.getLevel();
         builder.level(level.toString());

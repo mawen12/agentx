@@ -3,6 +3,7 @@ package com.github.mawen12.agentx.core.plugins.log4j2.common;
 import com.github.mawen12.agentx.api.interceptor.MethodInfo;
 import com.github.mawen12.agentx.api.log.AppLogData;
 import com.github.mawen12.agentx.api.log.LogConverter;
+import com.github.mawen12.agentx.core.utils.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.Message;
@@ -17,7 +18,7 @@ public class Log4jConverter implements LogConverter {
 
         AppLogData.AppLogDataBuilder builder = AppLogData.builder();
         Logger logger = (Logger) methodInfo.getInvoker();
-        if (logger.getName() == null || logger.getName().isEmpty()) {
+        if (StringUtils.isEmpty(logger.getName())) {
             builder.logger("ROOT");
         } else {
             builder.logger(logger.getName());
