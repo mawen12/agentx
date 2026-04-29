@@ -17,10 +17,8 @@ public class ConstructorInlineAdvice {
                               @Advice.Origin("#m") String method,
                               @Advice.AllArguments(readOnly = false, typing = Assigner.Typing.DYNAMIC) Object[] args
     ) {
-        System.out.println("method access " + key);
         Context context = Agent.getContext();
         if (context.isNoop()) {
-            System.err.println("context is noop for " + key);
             return;
         }
 
@@ -28,10 +26,7 @@ public class ConstructorInlineAdvice {
 
         InterceptorChain chain = InterceptorChainRouter.INSTANCE.resolve(key);
         if (chain != null) {
-            System.out.println("chain exists for " + key);
             chain.after(methodInfo, context);
-        } else {
-            System.err.println("chain if null for " + key);
         }
     }
 }

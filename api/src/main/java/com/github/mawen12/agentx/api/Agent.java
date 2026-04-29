@@ -11,6 +11,7 @@ import com.github.mawen12.agentx.api.metric.NameFactory;
 import com.github.mawen12.agentx.api.metric.Tags;
 import com.github.mawen12.agentx.api.spi.BeanProvider;
 
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,9 +25,14 @@ public class Agent {
     public static Config config;
     public static Map<BeanProvider.State, List<BeanProvider.Listener>> listeners = new HashMap<>();
     public static Map<String, Object> additionalAttributes = new HashMap<>();
+    public static ClassLoader agentClassLoader;
 
     public static Context getContext() {
         return contextManager.getContext();
+    }
+
+    public static ClassLoader getAgentClassLoader() {
+        return agentClassLoader;
     }
 
     public static MetricRegistry newMetricRegistry(Tags tags, NameFactory nameFactory) {

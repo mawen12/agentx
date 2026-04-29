@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class AgentxClassLoader extends URLClassLoader {
+public class AgentClassLoader extends URLClassLoader {
 
     static {
         ClassLoader.registerAsParallelCapable();
@@ -15,7 +15,7 @@ public class AgentxClassLoader extends URLClassLoader {
 
     private final Set<WeakReference<ClassLoader>> externals = new HashSet<>();
 
-    public AgentxClassLoader(URL[] urls) {
+    public AgentClassLoader(URL[] urls) {
         super(urls, null);
     }
 

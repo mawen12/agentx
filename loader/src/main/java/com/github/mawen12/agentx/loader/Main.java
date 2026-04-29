@@ -17,7 +17,7 @@ public class Main {
         JarCache jarCache = JarCache.build(jar);
 
         List<URL> urls = jarCache.nestedJarUrls("lib/");
-        ClassLoader loader = new AgentxClassLoader(urls.toArray(new URL[0]));
+        ClassLoader loader = new AgentClassLoader(urls.toArray(new URL[0]));
 
         List<JarFile> jarFiles = jarCache.nestedJarFiles("boot/");
         jarFiles.forEach(inst::appendToBootstrapClassLoaderSearch);

@@ -34,6 +34,7 @@ public class Bootstrap {
     public static void premain(String args, Instrumentation inst, String jarPath) throws Exception {
         long begin = System.nanoTime();
         Bootstrap.LOADER = Thread.currentThread().getContextClassLoader();
+        Agent.agentClassLoader = Thread.currentThread().getContextClassLoader();
 
         initConfig(jarPath);
 

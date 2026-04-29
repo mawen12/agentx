@@ -7,7 +7,8 @@ import lombok.Getter;
 public interface Interceptor {
     Order order();
 
-    default void init() {}
+    default void init() {
+    }
 
     void before(MethodInfo methodInfo, Context ctx);
 
@@ -18,7 +19,8 @@ public interface Interceptor {
     enum Order {
         PREPARE(20),
         TRACING(100),
-        METRIC(200);
+        METRIC(200),
+        LOG(201);
 
         private final int code;
     }

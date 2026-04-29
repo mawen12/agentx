@@ -29,6 +29,7 @@ public class ConfigFactory {
             .put("AGENT_SYSTEM", "agent.system")
             .put("AGENT_SERVER_PORT", "agent.server.port")
             .put("AGENT_SERVER_ENABLED", "agent.server.enabled")
+            .put("AGENT_LOGGING_LEVEL", "agent.logging.level")
             .build();
 
     public static Config loadConfig(String jarPath) {
