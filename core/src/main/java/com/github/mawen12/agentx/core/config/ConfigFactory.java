@@ -2,19 +2,19 @@ package com.github.mawen12.agentx.core.config;
 
 import com.github.mawen12.agentx.api.config.Config;
 import com.github.mawen12.agentx.api.logging.Logger;
-import com.github.mawen12.agentx.api.logging.LoggerFactory;
-import com.github.mawen12.agentx.core.Bootstrap;
 import com.github.mawen12.agentx.core.logging.AgentLogger;
 import com.github.mawen12.agentx.core.utils.StringUtils;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 

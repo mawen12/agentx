@@ -28,6 +28,7 @@
         <version.disruptor>4.0.0</version.disruptor>
         <version.httpservlet>4.0.1</version.httpservlet>
         <version.druid>1.2.28</version.druid>
+        <version.okhttp>4.12.0</version.okhttp>
     </properties>
 
     <dependencies>
@@ -124,6 +125,12 @@
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${version.logback}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${version.okhttp}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

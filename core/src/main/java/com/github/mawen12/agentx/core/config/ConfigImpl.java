@@ -4,7 +4,6 @@ import com.github.mawen12.agentx.api.config.Config;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 
-import java.util.Collections;
 import java.util.Map;
 
 @ToString

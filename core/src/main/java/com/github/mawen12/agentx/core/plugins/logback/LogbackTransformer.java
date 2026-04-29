@@ -4,7 +4,6 @@ import com.github.mawen12.agentx.api.interceptor.Interceptor;
 import com.github.mawen12.agentx.core.agent.AbstractClassTransformer;
 import com.github.mawen12.agentx.core.agent.ClassTransformer;
 import com.github.mawen12.agentx.core.agent.MethodMatcherWrapper;
-import com.github.mawen12.agentx.core.plugins.logback.common.LogbackConverter;
 import com.github.mawen12.agentx.core.plugins.logback.interceptor.log.LogbackLogInterceptor;
 import com.google.auto.service.AutoService;
 import net.bytebuddy.description.type.TypeDescription;

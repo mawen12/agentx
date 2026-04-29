@@ -10,7 +10,6 @@ import com.github.mawen12.agentx.core.plugins.jdbc.interceptor.metric.JdbcStmtMe
 import com.github.mawen12.agentx.core.plugins.jdbc.interceptor.preapre.JdbcStmtPrepareInterceptor;
 import com.google.auto.service.AutoService;
 import net.bytebuddy.description.NamedElement;
-import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.matcher.ElementMatcher;
 
@@ -18,12 +17,6 @@ import java.util.List;
 import java.util.Set;
 
 import static net.bytebuddy.matcher.ElementMatchers.*;
-import static net.bytebuddy.matcher.ElementMatchers.isAbstract;
-import static net.bytebuddy.matcher.ElementMatchers.isInterface;
-import static net.bytebuddy.matcher.ElementMatchers.isOverriddenFrom;
-import static net.bytebuddy.matcher.ElementMatchers.nameStartsWith;
-import static net.bytebuddy.matcher.ElementMatchers.named;
-import static net.bytebuddy.matcher.ElementMatchers.not;
 
 @AutoService(ClassTransformer.class)
 public class JdbcStmtTransformer extends AbstractClassTransformer {

@@ -3,7 +3,6 @@ package com.github.mawen12.agentx.core.plugins.log4j2;
 import com.github.mawen12.agentx.api.Agent;
 import com.github.mawen12.agentx.api.interceptor.Interceptor;
 import com.github.mawen12.agentx.api.utils.Sets;
-import com.github.mawen12.agentx.core.Bootstrap;
 import com.github.mawen12.agentx.core.agent.AbstractClassTransformer;
 import com.github.mawen12.agentx.core.agent.ClassTransformer;
 import com.github.mawen12.agentx.core.agent.MethodMatcherWrapper;

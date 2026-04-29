@@ -7,7 +7,6 @@ import com.github.mawen12.agentx.api.metric.ServiceMetricRegistry;
 import com.github.mawen12.agentx.api.metric.Tags;
 import com.github.mawen12.agentx.core.plugins.jdbc.common.DataSizeSqlCompression;
 import com.github.mawen12.agentx.core.plugins.jdbc.common.JdbcMetric;
-import com.github.mawen12.agentx.core.plugins.jdbc.common.SqlCompression;
 import com.github.mawen12.agentx.core.plugins.jdbc.common.SqlInfo;
 import com.google.common.cache.Cache;
 

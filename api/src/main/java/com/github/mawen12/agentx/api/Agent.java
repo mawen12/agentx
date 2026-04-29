@@ -11,7 +11,6 @@ import com.github.mawen12.agentx.api.metric.NameFactory;
 import com.github.mawen12.agentx.api.metric.Tags;
 import com.github.mawen12.agentx.api.spi.BeanProvider;
 
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

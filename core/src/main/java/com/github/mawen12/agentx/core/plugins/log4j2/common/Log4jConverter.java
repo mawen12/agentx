@@ -1,8 +1,8 @@
 package com.github.mawen12.agentx.core.plugins.log4j2.common;
 
 import com.github.mawen12.agentx.api.interceptor.MethodInfo;
-import com.github.mawen12.agentx.api.log.LogConverter;
 import com.github.mawen12.agentx.api.log.AppLogData;
+import com.github.mawen12.agentx.api.log.LogConverter;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.Message;
