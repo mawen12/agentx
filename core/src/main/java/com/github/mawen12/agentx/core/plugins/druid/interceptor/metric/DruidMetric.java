@@ -1,4 +1,4 @@
-package com.github.mawen12.agentx.core.plugins.druid.metric;
+package com.github.mawen12.agentx.core.plugins.druid.interceptor.metric;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.github.mawen12.agentx.api.Agent;
@@ -33,7 +33,7 @@ public class DruidMetric extends ServiceMetric implements Runnable {
     public void registerAndRun(DruidDataSource druidDataSource) {
         String key = druidDataSource.getName();
         if (!instances.containsKey(key)) {
-            LOGGER.info("register new instance for {}", key);
+            LOGGER.info("register druid datasource instance for {}", key);
             instances.put(key, new WeakReference<>(druidDataSource));
 
             if (!started) {

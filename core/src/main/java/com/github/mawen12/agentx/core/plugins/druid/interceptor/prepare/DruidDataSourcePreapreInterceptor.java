@@ -1,4 +1,4 @@
-package com.github.mawen12.agentx.core.plugins.druid.metric;
+package com.github.mawen12.agentx.core.plugins.druid.interceptor.prepare;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.github.mawen12.agentx.api.Agent;
@@ -8,17 +8,18 @@ import com.github.mawen12.agentx.api.interceptor.MethodInfo;
 import com.github.mawen12.agentx.api.logging.Logger;
 import com.github.mawen12.agentx.api.metric.ServiceMetricRegistry;
 import com.github.mawen12.agentx.api.metric.Tags;
+import com.github.mawen12.agentx.core.plugins.druid.interceptor.metric.DruidMetric;
 
-public class DruidDataSourceInterceptor implements Interceptor {
-    public static DruidDataSourceInterceptor INSTANCE = new DruidDataSourceInterceptor();
+public class DruidDataSourcePreapreInterceptor implements Interceptor {
+    public static DruidDataSourcePreapreInterceptor INSTANCE = new DruidDataSourcePreapreInterceptor();
 
-    private static final Logger LOGGER = Agent.getLogger(DruidDataSourceInterceptor.class);
+    private static final Logger LOGGER = Agent.getLogger(DruidDataSourcePreapreInterceptor.class);
 
     private DruidMetric metric;
 
     @Override
     public void init() {
-        Tags tags = new Tags("app", "druid-pool2", "resource");
+        Tags tags = new Tags("app", "druid-pool", "resource");
         metric = ServiceMetricRegistry.getOrCreate(tags, DruidMetric.DRUID_NAME_FACTORY, DruidMetric::new);
     }
 

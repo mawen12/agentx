@@ -1,4 +1,4 @@
-package com.github.mawen12.agentx.core.plugins.tomcat.metric;
+package com.github.mawen12.agentx.core.plugins.tomcat.interceptor.metric;
 
 import com.github.mawen12.agentx.api.metric.GaugeMetricModel;
 import lombok.AllArgsConstructor;

@@ -29,6 +29,7 @@
         <version.httpservlet>4.0.1</version.httpservlet>
         <version.druid>1.2.28</version.druid>
         <version.okhttp>4.12.0</version.okhttp>
+        <version.tomcat>10.0.27</version.tomcat>
     </properties>
 
     <dependencies>
@@ -131,6 +132,12 @@
                 <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>okhttp</artifactId>
                 <version>${version.okhttp}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-core</artifactId>
+                <version>${version.tomcat}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
