@@ -10,6 +10,7 @@ import com.github.mawen12.agentx.api.utils.ScheduleHelper;
 
 import java.lang.ref.WeakReference;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -30,7 +31,7 @@ public class DruidMetric extends ServiceMetric implements Runnable {
     }
 
     public void registerAndRun(DruidDataSource druidDataSource) {
-        String key = Integer.toHexString(System.identityHashCode(this));
+        String key = druidDataSource.getName();
         if (!instances.containsKey(key)) {
             LOGGER.info("register new instance for {}", key);
             instances.put(key, new WeakReference<>(druidDataSource));
@@ -48,10 +49,14 @@ public class DruidMetric extends ServiceMetric implements Runnable {
 
     @Override
     public void run() {
-        for (Map.Entry<String, WeakReference<DruidDataSource>> entry : instances.entrySet()) {
+        Iterator<Map.Entry<String, WeakReference<DruidDataSource>>> iter = instances.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<String, WeakReference<DruidDataSource>> entry = iter.next();
             WeakReference<DruidDataSource> value = entry.getValue();
             DruidDataSource druidDataSource = value.get();
-            if (druidDataSource != null && druidDataSource.isInited()) {
+            if (druidDataSource == null) {
+                iter.remove();
+            } else if (druidDataSource.isInited()) {
                 int activeCount = druidDataSource.getActiveCount();
                 int poolingCount = druidDataSource.getPoolingCount();
                 int maxActive = druidDataSource.getMaxActive();

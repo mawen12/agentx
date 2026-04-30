@@ -1,11 +1,11 @@
 package com.github.mawen12.agentx.loader;
 
-import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 public class AgentClassLoader extends URLClassLoader {
 
@@ -13,7 +13,7 @@ public class AgentClassLoader extends URLClassLoader {
         ClassLoader.registerAsParallelCapable();
     }
 
-    private final Set<WeakReference<ClassLoader>> externals = new HashSet<>();
+    private final Set<ClassLoader> externals = Collections.newSetFromMap(new WeakHashMap<>());
 
     public AgentClassLoader(URL[] urls) {
         super(urls, null);
@@ -21,7 +21,7 @@ public class AgentClassLoader extends URLClassLoader {
 
     public void add(ClassLoader cl) {
         if (cl != null && !Objects.equals(cl, this)) {
-            externals.add(new WeakReference<>(cl));
+            externals.add(cl);
         }
     }
 
@@ -30,20 +30,14 @@ public class AgentClassLoader extends URLClassLoader {
         try {
             return super.loadClass(name, resolve);
         } catch (ClassNotFoundException e) {
-            for (WeakReference<ClassLoader> external : externals) {
+            for (ClassLoader cl : externals) {
                 try {
-                    ClassLoader cl = external.get();
-                    if (cl == null) {
-                        continue;
-                    }
-
                     Class<?> aClass = cl.loadClass(name);
                     if (resolve) {
                         resolveClass(aClass);
                     }
                     return aClass;
                 } catch (ClassNotFoundException ignored) {
-
                 }
             }
 
@@ -55,13 +49,8 @@ public class AgentClassLoader extends URLClassLoader {
     public URL findResource(String name) {
         URL url = super.findResource(name);
         if (url == null) {
-            for (WeakReference<ClassLoader> external : externals) {
+            for (ClassLoader cl : externals) {
                 try {
-                    ClassLoader cl = external.get();
-                    if (cl == null) {
-                        continue;
-                    }
-
                     url = cl.getResource(name);
                     if (url != null) {
                         break;

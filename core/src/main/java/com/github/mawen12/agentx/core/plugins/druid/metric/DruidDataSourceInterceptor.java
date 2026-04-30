@@ -35,7 +35,6 @@ public class DruidDataSourceInterceptor implements Interceptor {
         } else {
             LOGGER.warn("{} is not DruidDataSource", methodInfo.getInvoker().getClass().getName());
         }
-
     }
 
     @Override

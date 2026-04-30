@@ -12,6 +12,7 @@ public class InterceptorChainRouter {
         if (byMethodName.containsKey(methodName)) {
             throw new IllegalStateException("[agent] method " + methodName + " already exists");
         }
+
         byMethodName.put(methodName, chain);
     }
 

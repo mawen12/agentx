@@ -2,15 +2,16 @@ package com.github.mawen12.agentx.api.utils;
 
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Collections;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 public class AgentHelperClassLoader extends URLClassLoader {
-    private static final ConcurrentMap<URL, URL> helpUrls = new ConcurrentHashMap<>();
+    private static final Set<URL> helpUrls = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     public static void registerUrl(Class<?> clazz) {
         URL url = clazz.getProtectionDomain().getCodeSource().getLocation();
-        helpUrls.putIfAbsent(url, url);
+        helpUrls.add(url);
     }
 
     public static AgentHelperClassLoader getClassLoader(ClassLoader parent, ClassLoader agent) {
@@ -18,7 +19,7 @@ public class AgentHelperClassLoader extends URLClassLoader {
         if (helpUrls.isEmpty()) {
             urls = new URL[0];
         } else {
-            urls = helpUrls.keySet().toArray(new URL[0]);
+            urls = helpUrls.toArray(new URL[0]);
         }
 
         return new AgentHelperClassLoader(urls, parent, agent);

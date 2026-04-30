@@ -14,6 +14,7 @@ import net.bytebuddy.matcher.ElementMatcher;
 import java.util.List;
 import java.util.Set;
 
+import static com.github.mawen12.agentx.core.agent.MethodMatcherWrapper.ofMethod;
 import static net.bytebuddy.matcher.ElementMatchers.*;
 
 @AutoService(ClassTransformer.class)
@@ -38,10 +39,10 @@ public class DoFilterTransformer extends AbstractClassTransformer {
     @Override
     public Set<MethodMatcherWrapper> getMethodMatchers() {
         return Sets.of(
-                MethodMatcherWrapper.ofMethod(
+                ofMethod(
                         named("doFilter").and(takesArgument(0, named("javax.servlet.ServletRequest")))
                                 .and(takesArgument(1, named("javax.servlet.ServletResponse")))),
-                MethodMatcherWrapper.ofMethod(
+                ofMethod(
                         named("service").and(takesArgument(0, named("javax.servlet.ServletRequest")))
                                 .and(takesArgument(1, named("javax.servlet.ServletResponse")))
                                 .and(isDefaultMethod()))

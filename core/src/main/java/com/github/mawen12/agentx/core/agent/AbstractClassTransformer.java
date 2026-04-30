@@ -12,15 +12,16 @@ import java.security.ProtectionDomain;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class AbstractClassTransformer implements ClassTransformer, AgentBuilder.Transformer{
+public abstract class AbstractClassTransformer implements ClassTransformer, AgentBuilder.Transformer {
 
     protected abstract String getAdviceKey();
 
     protected abstract List<Interceptor> getInterceptors();
 
+    private InterceptorChain chain;
+
     @Override
     public AgentBuilder build(AgentBuilder builder) {
-        InterceptorChainRouter.INSTANCE.add(this.getAdviceKey(), new InterceptorChain(this.getInterceptors()));
         return builder.type(this.getClassMatcher(), this.getClassLoaderMatcher()).transform(this);
     }
 
@@ -28,18 +29,24 @@ public abstract class AbstractClassTransformer implements ClassTransformer, Agen
     public DynamicType.Builder<?> transform(DynamicType.Builder<?> builder, TypeDescription typeDescription, ClassLoader classLoader, JavaModule module, ProtectionDomain protectionDomain) {
         String adviceKey = getAdviceKey();
 
+        if (chain == null) {
+            chain = new InterceptorChain(this.getInterceptors());
+            InterceptorChainRouter.INSTANCE.add(this.getAdviceKey(), chain);
+
+            List<Interceptor> interceptors = getInterceptors();
+            for (Interceptor interceptor : interceptors) {
+                interceptor.init();
+            }
+        }
+
+
         List<AgentBuilder.Transformer> transformers = this.getMethodMatchers()
                 .stream()
-                .map(methodMatcher -> new ForAdviceTransformer(methodMatcher.getByteBuddyMatcher(), adviceKey, methodMatcher.isConstructor() ? ConstructorInlineAdvice.class  : CommonInlineAdvice.class))
+                .map(methodMatcher -> new ForAdviceTransformer(methodMatcher.getByteBuddyMatcher(), adviceKey, methodMatcher.isConstructor() ? ConstructorInlineAdvice.class : CommonInlineAdvice.class))
                 .collect(Collectors.toList());
 
         if (this.addDynamicField()) {
             transformers.add(new DynamicFieldTransformer());
-        }
-
-        List<Interceptor> interceptors = getInterceptors();
-        for (Interceptor interceptor : interceptors) {
-            interceptor.init();
         }
 
         for (AgentBuilder.Transformer transformer : transformers) {

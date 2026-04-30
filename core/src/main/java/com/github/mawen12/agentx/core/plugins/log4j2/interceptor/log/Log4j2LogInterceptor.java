@@ -18,7 +18,7 @@ public class Log4j2LogInterceptor implements NonReentrantInterceptor {
 
     private static final Logger LOGGER = Agent.getLogger(Log4j2LogInterceptor.class);
 
-    private ConcurrentMap<ClassLoader, LogConverter> logConverts = new MapMaker().weakKeys().makeMap();
+    private final ConcurrentMap<ClassLoader, LogConverter> converters = new MapMaker().weakKeys().makeMap();
 
     @Override
     public void init() {
@@ -28,7 +28,7 @@ public class Log4j2LogInterceptor implements NonReentrantInterceptor {
     @Override
     public void doBefore(MethodInfo methodInfo, Context ctx) {
         ClassLoader appClassLoader = methodInfo.getInvoker().getClass().getClassLoader();
-        LogConverter log4jConverter = logConverts.get(appClassLoader);
+        LogConverter log4jConverter = converters.get(appClassLoader);
         if (log4jConverter == null) {
             try {
                 ClassLoader help = AgentHelperClassLoader.getClassLoader(appClassLoader, Agent.getAgentClassLoader());
@@ -36,7 +36,7 @@ public class Log4j2LogInterceptor implements NonReentrantInterceptor {
 //                log4jConverter = (Log4jConverter) clazz.getConstructor().newInstance();
                 // 使用接口而非实现类转换，避免出现 java.lang.ClassCastException: com.github.mawen12.agentx.core.plugins.log4j2.common.Log4jConverter cannot be cast to com.github.mawen12.agentx.core.plugins.log4j2.common.Log4jConverter
                 log4jConverter = (LogConverter) clazz.getConstructor().newInstance();
-                logConverts.putIfAbsent(appClassLoader, log4jConverter);
+                converters.putIfAbsent(appClassLoader, log4jConverter);
             } catch (ClassNotFoundException | InvocationTargetException | InstantiationException |
                      IllegalAccessException | NoSuchMethodException e) {
                 LOGGER.warn("load class com.github.mawen12.agentx.core.plugins.log4j2.common.LogConvert failed", e);
