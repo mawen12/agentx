@@ -39,7 +39,7 @@ public class DruidDataSourcePreapreInterceptor implements Interceptor {
     }
 
     @Override
-    public Order order() {
-        return Order.PREPARE;
+    public Signal signal() {
+        return Signal.PREPARE;
     }
 }

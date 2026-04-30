@@ -1,10 +1,10 @@
 package com.github.mawen12.agentx.core.plugins.httpservlet;
 
 import com.github.mawen12.agentx.api.interceptor.Interceptor;
+import com.github.mawen12.agentx.api.plugins.Plugin;
 import com.github.mawen12.agentx.api.utils.Lists;
 import com.github.mawen12.agentx.api.utils.Sets;
-import com.github.mawen12.agentx.core.agent.AbstractClassTransformer;
-import com.github.mawen12.agentx.core.agent.ClassTransformer;
+import com.github.mawen12.agentx.core.agent.AbstractPlugin;
 import com.github.mawen12.agentx.core.agent.MethodMatcherWrapper;
 import com.github.mawen12.agentx.core.plugins.httpservlet.interceptor.metric.DoFilterMetricInterceptor;
 import com.google.auto.service.AutoService;
@@ -17,12 +17,17 @@ import java.util.Set;
 import static com.github.mawen12.agentx.core.agent.MethodMatcherWrapper.ofMethod;
 import static net.bytebuddy.matcher.ElementMatchers.*;
 
-@AutoService(ClassTransformer.class)
-public class DoFilterTransformer extends AbstractClassTransformer {
+@AutoService(Plugin.class)
+public class DoFilterPlugin extends AbstractPlugin {
 
     @Override
-    protected String getAdviceKey() {
-        return DoFilterTransformer.class.getName();
+    public Domain domain() {
+        return Domain.HTTP_SERVLET;
+    }
+
+    @Override
+    public Component component() {
+        return Component.SERVLET;
     }
 
     @Override

@@ -54,10 +54,10 @@ public class JvmMemoryMetric extends ServiceMetric implements Runnable {
     }
 
     static class JvmMemoryGaugeMetricModel implements GaugeMetricModel {
-        private Long bytesInit;
-        private Long bytesUsed;
-        private Long bytesCommitted;
-        private Long bytesMax;
+        private final Long bytesInit;
+        private final Long bytesUsed;
+        private final Long bytesCommitted;
+        private final Long bytesMax;
 
         public JvmMemoryGaugeMetricModel(Long bytesInit, Long bytesUsed, Long bytesCommitted, Long bytesMax) {
             this.bytesInit = bytesInit;

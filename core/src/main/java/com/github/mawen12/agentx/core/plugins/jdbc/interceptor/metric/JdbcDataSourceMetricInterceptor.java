@@ -38,12 +38,11 @@ public class JdbcDataSourceMetricInterceptor implements NonReentrantInterceptor 
         } else {
             key = JdbcUtils.getUrl(conn);
         }
-
-
+        metric.collectMetric(key, success, ctx);
     }
 
     @Override
-    public Order order() {
-        return Order.METRIC;
+    public Signal signal() {
+        return Signal.METRIC;
     }
 }

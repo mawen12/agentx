@@ -1,6 +1,8 @@
 package com.github.mawen12.agentx.api.spi;
 
-public interface BeanProvider {
+import com.github.mawen12.agentx.api.config.ConfigAware;
+
+public interface BeanProvider extends ConfigAware {
 
     void afterPropertiesSet();
 

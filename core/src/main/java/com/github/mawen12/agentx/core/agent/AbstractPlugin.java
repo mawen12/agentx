@@ -1,5 +1,6 @@
 package com.github.mawen12.agentx.core.agent;
 
+import com.github.mawen12.agentx.api.config.Config;
 import com.github.mawen12.agentx.api.interceptor.Interceptor;
 import com.github.mawen12.agentx.api.interceptor.InterceptorChain;
 import com.github.mawen12.agentx.api.interceptor.InterceptorChainRouter;
@@ -10,15 +11,28 @@ import net.bytebuddy.utility.JavaModule;
 
 import java.security.ProtectionDomain;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-public abstract class AbstractClassTransformer implements ClassTransformer, AgentBuilder.Transformer {
-
-    protected abstract String getAdviceKey();
+public abstract class AbstractPlugin implements ClassTransformer {
 
     protected abstract List<Interceptor> getInterceptors();
 
     private InterceptorChain chain;
+
+    private Config config;
+
+    @Override
+    public boolean isEnabled() {
+        String upperKey = String.join(",", "plugin", domain().name(), component().name(), "enabled");
+        Boolean enabled = config.getBoolean(upperKey.toLowerCase());
+        return Objects.equals(enabled, true);
+    }
+
+    @Override
+    public void setConfig(Config config) {
+        this.config = config;
+    }
 
     @Override
     public AgentBuilder build(AgentBuilder builder) {
@@ -28,17 +42,19 @@ public abstract class AbstractClassTransformer implements ClassTransformer, Agen
     @Override
     public DynamicType.Builder<?> transform(DynamicType.Builder<?> builder, TypeDescription typeDescription, ClassLoader classLoader, JavaModule module, ProtectionDomain protectionDomain) {
         String adviceKey = getAdviceKey();
-
         if (chain == null) {
-            chain = new InterceptorChain(this.getInterceptors());
-            InterceptorChainRouter.INSTANCE.add(this.getAdviceKey(), chain);
+            List<Interceptor> decoratorList = this.getInterceptors()
+                    .stream()
+                    .map(delegate -> new InterceptorDecorator(delegate, config, domain().getName(), component().getName()))
+                    .collect(Collectors.toList());
+            chain = new InterceptorChain(decoratorList);
+            InterceptorChainRouter.INSTANCE.add(adviceKey, chain);
 
             List<Interceptor> interceptors = getInterceptors();
             for (Interceptor interceptor : interceptors) {
                 interceptor.init();
             }
         }
-
 
         List<AgentBuilder.Transformer> transformers = this.getMethodMatchers()
                 .stream()
@@ -54,5 +70,9 @@ public abstract class AbstractClassTransformer implements ClassTransformer, Agen
         }
 
         return builder;
+    }
+
+    private String getAdviceKey() {
+        return domain() + "." + component();
     }
 }

@@ -1,10 +1,10 @@
 package com.github.mawen12.agentx.core.plugins.springboot;
 
 import com.github.mawen12.agentx.api.interceptor.Interceptor;
+import com.github.mawen12.agentx.api.plugins.Plugin;
 import com.github.mawen12.agentx.api.utils.Lists;
 import com.github.mawen12.agentx.api.utils.Sets;
-import com.github.mawen12.agentx.core.agent.AbstractClassTransformer;
-import com.github.mawen12.agentx.core.agent.ClassTransformer;
+import com.github.mawen12.agentx.core.agent.AbstractPlugin;
 import com.github.mawen12.agentx.core.agent.MethodMatcherWrapper;
 import com.github.mawen12.agentx.core.plugins.springboot.interceptor.SpringBootReadyPrepareInterceptor;
 import com.google.auto.service.AutoService;
@@ -16,12 +16,17 @@ import java.util.Set;
 
 import static net.bytebuddy.matcher.ElementMatchers.*;
 
-@AutoService(ClassTransformer.class)
-public class SpringBootReadyEventTransformer extends AbstractClassTransformer {
+@AutoService(Plugin.class)
+public class SpringBootReadyEventPlugin extends AbstractPlugin {
 
     @Override
-    protected String getAdviceKey() {
-        return SpringBootReadyEventTransformer.class.getName();
+    public Domain domain() {
+        return Domain.SPRING_BOOT;
+    }
+
+    @Override
+    public Component component() {
+        return Component.READ_EVENT;
     }
 
     @Override

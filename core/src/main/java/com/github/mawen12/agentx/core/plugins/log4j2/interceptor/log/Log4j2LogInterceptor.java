@@ -58,7 +58,7 @@ public class Log4j2LogInterceptor implements NonReentrantInterceptor {
     }
 
     @Override
-    public Order order() {
-        return Order.LOG;
+    public Signal signal() {
+        return Signal.LOGGING;
     }
 }

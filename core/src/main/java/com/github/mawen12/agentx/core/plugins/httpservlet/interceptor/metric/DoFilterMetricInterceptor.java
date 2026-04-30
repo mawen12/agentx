@@ -32,7 +32,7 @@ public class DoFilterMetricInterceptor extends BaseInterceptor {
     }
 
     @Override
-    public Order order() {
-        return Order.METRIC;
+    public Signal signal() {
+        return Signal.METRIC;
     }
 }

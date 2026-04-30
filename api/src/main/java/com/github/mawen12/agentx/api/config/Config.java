@@ -42,7 +42,7 @@ public interface Config {
         return value.equalsIgnoreCase("yes") || value.equalsIgnoreCase("true");
     }
 
-    default Boolean getBoolean(String key, Boolean defaultVal) {
+    default Boolean getBoolean(String key, boolean defaultVal) {
         return Null.of(getBoolean(key), defaultVal);
     }
 

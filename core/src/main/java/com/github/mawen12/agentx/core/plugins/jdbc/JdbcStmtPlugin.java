@@ -1,10 +1,10 @@
 package com.github.mawen12.agentx.core.plugins.jdbc;
 
 import com.github.mawen12.agentx.api.interceptor.Interceptor;
+import com.github.mawen12.agentx.api.plugins.Plugin;
 import com.github.mawen12.agentx.api.utils.Lists;
 import com.github.mawen12.agentx.api.utils.Sets;
-import com.github.mawen12.agentx.core.agent.AbstractClassTransformer;
-import com.github.mawen12.agentx.core.agent.ClassTransformer;
+import com.github.mawen12.agentx.core.agent.AbstractPlugin;
 import com.github.mawen12.agentx.core.agent.MethodMatcherWrapper;
 import com.github.mawen12.agentx.core.plugins.jdbc.interceptor.metric.JdbcStmtMetricInterceptor;
 import com.github.mawen12.agentx.core.plugins.jdbc.interceptor.preapre.JdbcStmtPrepareInterceptor;
@@ -18,8 +18,8 @@ import java.util.Set;
 
 import static net.bytebuddy.matcher.ElementMatchers.*;
 
-@AutoService(ClassTransformer.class)
-public class JdbcStmtTransformer extends AbstractClassTransformer {
+@AutoService(Plugin.class)
+public class JdbcStmtPlugin extends AbstractPlugin {
 
     @Override
     public boolean addDynamicField() {
@@ -27,8 +27,13 @@ public class JdbcStmtTransformer extends AbstractClassTransformer {
     }
 
     @Override
-    protected String getAdviceKey() {
-        return "Jdbc-Statement";
+    public Domain domain() {
+        return Domain.JDBC;
+    }
+
+    @Override
+    public Component component() {
+        return Component.STATEMENT;
     }
 
     @Override

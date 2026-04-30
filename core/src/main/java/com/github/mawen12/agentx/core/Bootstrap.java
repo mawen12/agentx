@@ -3,6 +3,7 @@ package com.github.mawen12.agentx.core;
 import com.github.mawen12.agentx.api.Agent;
 import com.github.mawen12.agentx.api.config.Constants;
 import com.github.mawen12.agentx.api.logging.Logger;
+import com.github.mawen12.agentx.api.plugins.Plugin;
 import com.github.mawen12.agentx.api.spi.BeanProvider;
 import com.github.mawen12.agentx.core.agent.AgentIgnore;
 import com.github.mawen12.agentx.core.agent.AgentListener;
@@ -54,16 +55,21 @@ public class Bootstrap {
 
         List<BeanProvider> beanProviders = ServiceLoaderUtils.load(BeanProvider.class);
         for (BeanProvider beanProvider : beanProviders) {
+            beanProvider.setConfig(Agent.config);
             Agent.addListener(beanProvider.onState(), beanProvider::afterPropertiesSet);
             LOGGER.info("register BeanProvider: {} on {}", beanProvider.getClass().getSimpleName(), beanProvider.onState().name());
         }
 
         Agent.markStart();
 
-        List<ClassTransformer> transformers = ServiceLoaderUtils.load(ClassTransformer.class);
-        for (ClassTransformer transformer : transformers) {
-            agentBuilder = transformer.build(agentBuilder);
-            LOGGER.info("register ClassTransformer: {}", transformer.getClass().getSimpleName());
+        List<Plugin> plugins = ServiceLoaderUtils.load(Plugin.class);
+        for (Plugin plugin : plugins) {
+            if (plugin instanceof ClassTransformer) {
+                ClassTransformer transformer = (ClassTransformer) plugin;
+                agentBuilder = transformer.build(agentBuilder);
+                LOGGER.info("register ClassTransformer: {}", transformer.getClass().getSimpleName());
+            }
+            plugin.setConfig(Agent.config);
         }
 
         long installBegin = System.currentTimeMillis();

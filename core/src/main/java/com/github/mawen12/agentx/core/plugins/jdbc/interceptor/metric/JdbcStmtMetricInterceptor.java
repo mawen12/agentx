@@ -38,7 +38,7 @@ public class JdbcStmtMetricInterceptor implements NonReentrantInterceptor {
     }
 
     @Override
-    public Order order() {
-        return Order.METRIC;
+    public Signal signal() {
+        return Signal.METRIC;
     }
 }

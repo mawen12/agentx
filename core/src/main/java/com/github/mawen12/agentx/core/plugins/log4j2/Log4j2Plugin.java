@@ -2,9 +2,9 @@ package com.github.mawen12.agentx.core.plugins.log4j2;
 
 import com.github.mawen12.agentx.api.Agent;
 import com.github.mawen12.agentx.api.interceptor.Interceptor;
+import com.github.mawen12.agentx.api.plugins.Plugin;
 import com.github.mawen12.agentx.api.utils.Sets;
-import com.github.mawen12.agentx.core.agent.AbstractClassTransformer;
-import com.github.mawen12.agentx.core.agent.ClassTransformer;
+import com.github.mawen12.agentx.core.agent.AbstractPlugin;
 import com.github.mawen12.agentx.core.agent.MethodMatcherWrapper;
 import com.github.mawen12.agentx.core.plugins.log4j2.interceptor.log.Log4j2LogInterceptor;
 import com.google.auto.service.AutoService;
@@ -17,12 +17,17 @@ import java.util.Set;
 
 import static net.bytebuddy.matcher.ElementMatchers.*;
 
-@AutoService(ClassTransformer.class)
-public class Log4j2Transformer extends AbstractClassTransformer {
+@AutoService(Plugin.class)
+public class Log4j2Plugin extends AbstractPlugin {
 
     @Override
-    protected String getAdviceKey() {
-        return Log4j2Transformer.class.getName();
+    public Domain domain() {
+        return Domain.LOG4J2;
+    }
+
+    @Override
+    public Component component() {
+        return Component.LOG;
     }
 
     @Override

@@ -38,7 +38,7 @@ public enum LogbackLogInterceptor implements NonReentrantInterceptor {
     }
 
     @Override
-    public Order order() {
-        return Order.LOG;
+    public Signal signal() {
+        return Signal.LOGGING;
     }
 }

@@ -5,7 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 public interface Interceptor {
-    Order order();
+    Signal signal();
+
+    default int order() {
+        return signal().getOrder();
+    }
 
     default void init() {
     }
@@ -16,12 +20,13 @@ public interface Interceptor {
 
     @Getter
     @AllArgsConstructor
-    enum Order {
-        PREPARE(20),
-        TRACING(100),
-        METRIC(200),
-        LOG(201);
+    enum Signal {
+        PREPARE("prepare", 20),
+        TRACING("tracing", 100),
+        METRIC("metric", 200),
+        LOGGING("logging", 201);
 
-        private final int code;
+        private final String name;
+        private final int order;
     }
 }
