@@ -9,6 +9,7 @@ import com.github.mawen12.agentx.api.metric.MetricRegistry;
 import com.github.mawen12.agentx.api.metric.MetricRegistryManager;
 import com.github.mawen12.agentx.api.metric.NameFactory;
 import com.github.mawen12.agentx.api.metric.Tags;
+import com.github.mawen12.agentx.api.report.Reporter;
 import com.github.mawen12.agentx.api.spi.BeanProvider;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class Agent {
     public static Map<BeanProvider.State, List<BeanProvider.Listener>> listeners = new HashMap<>();
     public static Map<String, Object> additionalAttributes = new HashMap<>();
     public static ClassLoader agentClassLoader;
+    public static Reporter reporter;
 
     public static Context getContext() {
         return contextManager.getContext();
@@ -65,5 +67,9 @@ public class Agent {
                 listener.onState();
             }
         }
+    }
+
+    public static Reporter getReporter() {
+        return reporter;
     }
 }

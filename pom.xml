@@ -30,6 +30,8 @@
         <version.druid>1.2.28</version.druid>
         <version.okhttp>4.12.0</version.okhttp>
         <version.tomcat>10.0.27</version.tomcat>
+        <version.zipkin-sender-kafka>3.5.3</version.zipkin-sender-kafka>
+        <version.jackson>2.21.3</version.jackson>
     </properties>
 
     <dependencies>
@@ -138,6 +140,22 @@
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-core</artifactId>
                 <version>${version.tomcat}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.zipkin.reporter2</groupId>
+                <artifactId>zipkin-reporter-bom</artifactId>
+                <version>${version.zipkin-sender-kafka}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${version.jackson}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

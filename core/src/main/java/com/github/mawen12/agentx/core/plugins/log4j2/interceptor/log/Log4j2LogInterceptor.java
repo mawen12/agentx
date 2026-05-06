@@ -46,9 +46,10 @@ public class Log4j2LogInterceptor implements NonReentrantInterceptor {
 
         AppLogData data = log4jConverter.convert(methodInfo);
         if (data != null) {
-            LOGGER.info("app-log: Logger: {}, Thread: {}, Level: {}, Message: {}",
-                    data.getLogger(), data.getThreadName(), data.getLevel(),
-                    data.getMessage(), data.getThrowable());
+//            LOGGER.info("app-log: Logger: {}, Thread: {}, Level: {}, Message: {}",
+//                    data.getLogger(), data.getThreadName(), data.getLevel(),
+//                    data.getMessage(), data.getThrowable());
+            Agent.getReporter().report(data);
         }
     }
 

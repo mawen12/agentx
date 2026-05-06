@@ -26,9 +26,10 @@ public enum LogbackLogInterceptor implements NonReentrantInterceptor {
     public void doBefore(MethodInfo methodInfo, Context ctx) {
         AppLogData data = logbackConverter.convert(methodInfo);
         if (data != null) {
-            LOGGER.info("app-log: Logger: {}, Thread: {}, Level: {}, Message: {}",
-                    data.getLogger(), data.getThreadName(), data.getLevel(),
-                    data.getMessage(), data.getThrowable());
+//            LOGGER.info("app-log: Logger: {}, Thread: {}, Level: {}, Message: {}",
+//                    data.getLogger(), data.getThreadName(), data.getLevel(),
+//                    data.getMessage(), data.getThrowable());
+            Agent.getReporter().report(data);
         }
     }
 

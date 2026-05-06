@@ -13,4 +13,6 @@ public class AppLogData {
     private final String message;
     private final Throwable throwable;
     private final String agentSource;
+
+    private byte[] bytes;
 }

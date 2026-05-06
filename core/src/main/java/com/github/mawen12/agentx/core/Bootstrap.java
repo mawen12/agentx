@@ -4,6 +4,7 @@ import com.github.mawen12.agentx.api.Agent;
 import com.github.mawen12.agentx.api.config.Constants;
 import com.github.mawen12.agentx.api.logging.Logger;
 import com.github.mawen12.agentx.api.plugins.Plugin;
+import com.github.mawen12.agentx.api.report.Reporter;
 import com.github.mawen12.agentx.api.spi.BeanProvider;
 import com.github.mawen12.agentx.core.agent.AgentIgnore;
 import com.github.mawen12.agentx.core.agent.AgentListener;
@@ -14,6 +15,7 @@ import com.github.mawen12.agentx.core.logging.AgentLogger;
 import com.github.mawen12.agentx.core.logging.AgentLoggerFactory;
 import com.github.mawen12.agentx.core.metric.MetricRegistryManagerImpl;
 import com.github.mawen12.agentx.core.metric.prometheus.MetricServer;
+import com.github.mawen12.agentx.core.report.DefaultReporter;
 import com.github.mawen12.agentx.core.utils.NetUtils;
 import com.github.mawen12.agentx.core.utils.ServiceLoaderUtils;
 import net.bytebuddy.agent.builder.AgentBuilder;
@@ -53,6 +55,7 @@ public class Bootstrap {
                 .with(AgentListener.INSTANCE)
                 .ignore(AgentIgnore.ignored());
 
+        // bean provider
         List<BeanProvider> beanProviders = ServiceLoaderUtils.load(BeanProvider.class);
         for (BeanProvider beanProvider : beanProviders) {
             beanProvider.setConfig(Agent.config);
@@ -62,6 +65,7 @@ public class Bootstrap {
 
         Agent.markStart();
 
+        // plugin
         List<Plugin> plugins = ServiceLoaderUtils.load(Plugin.class);
         for (Plugin plugin : plugins) {
             if (plugin instanceof ClassTransformer) {
@@ -71,6 +75,12 @@ public class Bootstrap {
             }
             plugin.setConfig(Agent.config);
         }
+
+        // reporter
+        Reporter reporter = new DefaultReporter();
+        reporter.init(Agent.config);
+        Agent.reporter = reporter;
+
 
         long installBegin = System.currentTimeMillis();
         agentBuilder.installOn(inst);
