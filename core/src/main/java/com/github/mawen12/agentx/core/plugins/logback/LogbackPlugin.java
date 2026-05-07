@@ -2,9 +2,12 @@ package com.github.mawen12.agentx.core.plugins.logback;
 
 import com.github.mawen12.agentx.api.interceptor.Interceptor;
 import com.github.mawen12.agentx.api.plugins.Plugin;
+import com.github.mawen12.agentx.api.utils.Lists;
 import com.github.mawen12.agentx.core.agent.AbstractPlugin;
 import com.github.mawen12.agentx.core.agent.MethodMatcherWrapper;
 import com.github.mawen12.agentx.core.plugins.logback.interceptor.log.LogbackLogInterceptor;
+import com.github.mawen12.agentx.core.plugins.logback.interceptor.metric.LogbackMetricInterceptor;
+import com.github.mawen12.agentx.core.plugins.logback.interceptor.prepare.LogbackPrepareInterceptor;
 import com.google.auto.service.AutoService;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.matcher.ElementMatcher;
@@ -30,7 +33,11 @@ public class LogbackPlugin extends AbstractPlugin {
 
     @Override
     protected List<Interceptor> getInterceptors() {
-        return Collections.singletonList(LogbackLogInterceptor.INSTANCE);
+        return Lists.of(
+                LogbackPrepareInterceptor.INSTANCE,
+                LogbackMetricInterceptor.INSTANCE,
+                LogbackLogInterceptor.INSTANCE
+        );
     }
 
     @Override

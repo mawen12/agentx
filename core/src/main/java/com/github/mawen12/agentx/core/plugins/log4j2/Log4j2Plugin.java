@@ -3,15 +3,17 @@ package com.github.mawen12.agentx.core.plugins.log4j2;
 import com.github.mawen12.agentx.api.Agent;
 import com.github.mawen12.agentx.api.interceptor.Interceptor;
 import com.github.mawen12.agentx.api.plugins.Plugin;
+import com.github.mawen12.agentx.api.utils.Lists;
 import com.github.mawen12.agentx.api.utils.Sets;
 import com.github.mawen12.agentx.core.agent.AbstractPlugin;
 import com.github.mawen12.agentx.core.agent.MethodMatcherWrapper;
 import com.github.mawen12.agentx.core.plugins.log4j2.interceptor.log.Log4j2LogInterceptor;
+import com.github.mawen12.agentx.core.plugins.log4j2.interceptor.metric.Log4j2MetricInterceptor;
+import com.github.mawen12.agentx.core.plugins.log4j2.interceptor.prepare.Log4j2PrepareInterceptor;
 import com.google.auto.service.AutoService;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.matcher.ElementMatcher;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -32,7 +34,11 @@ public class Log4j2Plugin extends AbstractPlugin {
 
     @Override
     protected List<Interceptor> getInterceptors() {
-        return Collections.singletonList(Log4j2LogInterceptor.INSTANCE);
+        return Lists.of(
+                Log4j2PrepareInterceptor.INSTANCE,
+                Log4j2MetricInterceptor.INSTANCE,
+                Log4j2LogInterceptor.INSTANCE
+        );
     }
 
     @Override
