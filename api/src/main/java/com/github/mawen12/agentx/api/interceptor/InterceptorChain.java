@@ -1,6 +1,7 @@
 package com.github.mawen12.agentx.api.interceptor;
 
 import com.github.mawen12.agentx.api.context.Context;
+import com.github.mawen12.agentx.api.utils.ContextUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -21,6 +22,7 @@ public class InterceptorChain {
 
     public void before(MethodInfo methodInfo, Context ctx) {
         doBefore(methodInfo, ctx, 0);
+        ContextUtils.setBeginTime(ctx);
     }
 
     private void doBefore(MethodInfo methodInfo, Context ctx, int pos) {
@@ -38,6 +40,7 @@ public class InterceptorChain {
     }
 
     public void after(MethodInfo methodInfo, Context ctx) {
+        ContextUtils.setEndTime(ctx);
         doAfter(methodInfo, ctx, interceptors.size() - 1);
     }
 

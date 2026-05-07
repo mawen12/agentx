@@ -22,7 +22,10 @@ public interface Plugin extends ConfigAware {
         LOG4J2("log4j2"),
         LOGBACK("logback"),
         SPRING_BOOT("spring-boot"),
-        TOMCAT("tomcat");
+        TOMCAT("tomcat"),
+        JEDIS("jedis"),
+        LETTUCE_REDIS("lettuce-redis"),
+        ;
 
         private final String name;
     }
@@ -38,7 +41,9 @@ public interface Plugin extends ConfigAware {
         MEMORY("memory"),
         LOG("log"),
         ENDPOINT("endpoint"),
-        READ_EVENT("ready-event");
+        READ_EVENT("ready-event"),
+        CACHE("cache"),
+        CLIENT("client");
 
         private final String name;
     }
