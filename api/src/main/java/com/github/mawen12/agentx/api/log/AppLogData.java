@@ -12,7 +12,4 @@ public class AppLogData {
     private final long epochMillis;
     private final String message;
     private final Throwable throwable;
-    private final String agentSource;
-
-    private byte[] bytes;
 }

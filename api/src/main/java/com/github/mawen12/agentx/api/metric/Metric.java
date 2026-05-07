@@ -122,8 +122,6 @@ public interface Metric {
         CONSUMER_M1_ERROR_RATE("conserrm1"),
         CONSUMER_M5_ERROR_RATE("conserrm5"),
         CONSUMER_M15_ERROR_RATE("conserrm15"),
-
-
         ;
 
         private final String field;

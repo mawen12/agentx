@@ -34,6 +34,7 @@
         <version.jackson>2.21.3</version.jackson>
         <version.jedis>3.5.2</version.jedis>
         <version.lettuce>5.3.6.RELEASE</version.lettuce>
+        <version.kafka>3.9.2</version.kafka>
     </properties>
 
     <dependencies>
@@ -170,6 +171,12 @@
                 <groupId>io.lettuce</groupId>
                 <artifactId>lettuce-core</artifactId>
                 <version>${version.lettuce}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-clients</artifactId>
+                <version>${version.kafka}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
